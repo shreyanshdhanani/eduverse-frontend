@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #ebe2ff;
+  --color-secondary: #2D3748;
+  --color-accent: #F6E05E;
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 10px rgba(191, 64, 191, 0.5);
+  }
+
+  /* Light Purple */
+  50% {
+    box-shadow: 0 0 20px rgba(128, 0, 255, 1);
+  }
+
+  /* Vibrant Deep Purple */
+  100% {
+    box-shadow: 0 0 10px rgba(191, 64, 191, 0.5);
+  }
+}
+
+.animate-glow {
+  animation: glow 1.5s infinite alternate ease-in-out;
+}
