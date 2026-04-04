@@ -1,10 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { GenerateQuestionService } from "@/app/service/quiz.service";
 
-const QuizComponent = () => {
+const QuizContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedTopic = searchParams.get("topic");
@@ -135,6 +135,14 @@ const QuizComponent = () => {
         )}
       </div>
     </div>
+  );
+};
+
+const QuizComponent = () => {
+  return (
+    <Suspense fallback={<div className="text-center text-lg mt-10">Loading quiz...</div>}>
+      <QuizContent />
+    </Suspense>
   );
 };
 

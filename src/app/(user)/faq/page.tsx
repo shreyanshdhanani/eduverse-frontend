@@ -134,7 +134,7 @@ export default function FAQPage() {
                         <span className="text-yellow-300">Questions</span>
                     </h1>
                     <p className="text-xl text-purple-100 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        Got questions? We've got answers. Browse below or use search to find what you need.
+                        Got questions? We&apos;ve got answers. Browse below or use search to find what you need.
                     </p>
                     {/* Search */}
                     <div className="relative max-w-xl mx-auto">
@@ -154,7 +154,7 @@ export default function FAQPage() {
             <section className="py-20 max-w-4xl mx-auto px-6">
                 {filteredFaqs.length === 0 ? (
                     <div className="text-center py-16">
-                        <p className="text-gray-400 text-lg">No results found for "{search}"</p>
+                        <p className="text-gray-400 text-lg">No results found for &quot;{search}&quot;</p>
                         <button
                             onClick={() => setSearch("")}
                             className="mt-4 text-purple-600 font-semibold hover:underline"
