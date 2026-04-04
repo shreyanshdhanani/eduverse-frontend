@@ -134,3 +134,12 @@ export const GetProviderEarningsAnalyticsService = async () => {
     throw new Error(error.response?.data?.message || 'Earnings analytics fetch failed.');
   }
 };
+
+export const CourseProviderStatusService = async (id: string, status: string) => {
+  try {
+    const response = await axiosInstance.post(`/course-provider/status/${id}`, { status });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || 'Status update failed.');
+  }
+};
