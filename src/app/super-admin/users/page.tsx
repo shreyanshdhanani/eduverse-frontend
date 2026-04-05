@@ -44,20 +44,20 @@ export default function UsersPage() {
       {users.length === 0 ? (
         <p>No users found.</p>
       ) : (
-        <div>
-          <table className="w-full border-collapse bg-white">
+        <div className="overflow-x-auto -mx-2 sm:mx-0">
+          <table className="w-full border-collapse bg-white min-w-[480px]">
             <thead>
               <tr className="bg-gray-200 text-left">
-                <th className="p-3">Name</th>
-                <th className="p-3">Email</th>
-                <th className="p-3 text-center">Actions</th>
+                <th className="p-3 text-sm">Name</th>
+                <th className="p-3 text-sm">Email</th>
+                <th className="p-3 text-center text-sm">Actions</th>
               </tr>
             </thead>
             <tbody>
               {users.map((user) => (
                 <tr key={user._id} className="border-b hover:bg-gray-100">
-                  <td className="p-3">{user.name}</td>
-                  <td className="p-3">{user.email}</td>
+                  <td className="p-3 text-sm">{user.name}</td>
+                  <td className="p-3 text-sm">{user.email}</td>
                   <td className="p-3 flex justify-center items-center space-x-8">
                     <button
                       onClick={() => router.push(`/super-admin/users/${user._id}`)}

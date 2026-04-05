@@ -10,7 +10,7 @@ import { GetAllCategoryService } from "@/app/service/category-service";
 import { GetSubcategoriesByCategoryService } from "@/app/service/subcategory-service";
 import { GetCoursesByCategoryService } from "@/app/service/course-provider-service";
 import { useRouter } from "next/navigation";
-import { GetAllCourcesService } from "@/app/service/course-service";
+import { GetAllCoursesService } from "@/app/service/course-service";
 import { getAssetUrl } from "@/app/utils/asset-url";
 
 // ** Carousel Settings **
@@ -41,7 +41,7 @@ const CoursePage = () => {
   useEffect(() => {
     const fetchAllCourses = async () => {
       try {
-        const courseData = await GetAllCourcesService();
+        const courseData = await GetAllCoursesService();
         setCourses(Array.isArray(courseData) ? courseData : (courseData as any)?.data || []);
       } catch (error) {
         console.error("Error fetching courses:", error);
@@ -88,7 +88,7 @@ const CoursePage = () => {
       if (categoryId) {
         courseData = await GetCoursesByCategoryService(categoryId, subcategoryId);
       } else {
-        courseData = await GetAllCourcesService(); // If no category, fetch all courses
+        courseData = await GetAllCoursesService(); // If no category, fetch all courses
       }
       setCourses(Array.isArray(courseData) ? courseData : (courseData as any)?.data || []);
     } catch (error) {

@@ -18,9 +18,9 @@ export const EnrollCourseService = async (token: string, id: string) => {
   }
 }
 
-export const GetAllCourcesService = async () => {
+export const GetAllCoursesService = async () => {
   try {
-    const response = await axiosInstance.get(`/courses/get-all-cources`);
+    const response = await axiosInstance.get(`/courses/get-all-courses`);
     return response;
   } catch (error: any) {
     if (error instanceof AxiosError) {

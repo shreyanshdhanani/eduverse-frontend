@@ -133,3 +133,65 @@ export const GetAllStudentByUniversity = async () => {
         }
     }
 }
+
+export const GetUniversityDashboardData = async () => {
+    try {
+        const token = localStorage.getItem('authToken');
+        const response = await axiosInstance.get(`/university-admin/dashboard-stats/${token}`);
+        return response;
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            const errorMessage = (error as AxiosError<any>).response?.data?.message || "Failed to fetch dashboard data";
+            throw new Error(errorMessage);
+        } else {
+            throw new Error("An unexpected error occurred.");
+        }
+    }
+};
+
+export const GetUniversityProfile = async () => {
+    try {
+        const token = localStorage.getItem('authToken');
+        const response = await axiosInstance.get(`/university-admin/profile/${token}`);
+        return response;
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            const errorMessage = (error as AxiosError<any>).response?.data?.message || "Failed to fetch profile";
+            throw new Error(errorMessage);
+        } else {
+            throw new Error("An unexpected error occurred.");
+        }
+    }
+};
+
+export const UpdateUniversityProfile = async (formData: any) => {
+    try {
+        const token = localStorage.getItem('authToken');
+        const response = await axiosInstance.patch(`/university-admin/profile/${token}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        return response;
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            const errorMessage = (error as AxiosError<any>).response?.data?.message || "Update failed";
+            throw new Error(errorMessage);
+        } else {
+            throw new Error("An unexpected error occurred.");
+        }
+    }
+};
+
+export const GetUniversityEnrolledStudents = async () => {
+    try {
+        const token = localStorage.getItem('authToken');
+        const response = await axiosInstance.get(`/university-admin/get-enrolled-students/${token}`);
+        return response;
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            const errorMessage = (error as AxiosError<any>).response?.data?.message || "Failed to fetch enrolled students";
+            throw new Error(errorMessage);
+        } else {
+            throw new Error("An unexpected error occurred.");
+        }
+    }
+};

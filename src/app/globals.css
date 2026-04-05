@@ -8,6 +8,48 @@
   --color-accent: #F6E05E;
 }
 
+/* --- Responsive Base Styles --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Prevent horizontal overflow */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Touch-friendly minimum tap targets */
+button, a, [role="button"] {
+  min-height: 36px;
+}
+
+/* Images & media responsive by default */
+img, video, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Tables responsive wrapper */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .bg-primary {
   background-color: var(--color-primary);
 }
@@ -35,3 +77,8 @@
 .animate-glow {
   animation: glow 1.5s infinite alternate ease-in-out;
 }
+
+/* Sidebar transition */
+.sidebar-transition {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

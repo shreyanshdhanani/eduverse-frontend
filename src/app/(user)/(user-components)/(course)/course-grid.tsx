@@ -6,7 +6,7 @@ import { GetAllCategoryService } from "@/app/service/category-service";
 import { GetSubcategoriesByCategoryService } from "@/app/service/subcategory-service";
 import { GetCoursesByCategoryService } from "@/app/service/course-provider-service";
 import { useRouter } from "next/navigation";
-import { GetAllCourcesService } from "@/app/service/course-service";
+import { GetAllCoursesService } from "@/app/service/course-service";
 import { getAssetUrl } from "@/app/utils/asset-url";
 import { Search, Filter, BookOpen, Clock, Globe } from "lucide-react";
 
@@ -26,7 +26,7 @@ const CourseGrid = () => {
             setIsLoading(true);
             try {
                 const [courseData, categoryData] = await Promise.all([
-                    GetAllCourcesService(),
+                    GetAllCoursesService(),
                     GetAllCategoryService()
                 ]);
                 
@@ -59,7 +59,7 @@ const CourseGrid = () => {
                 setCourses(Array.isArray(courseData) ? courseData : (courseData as any)?.data || []);
             } else {
                 setSubcategories([]);
-                const courseData = await GetAllCourcesService();
+                const courseData = await GetAllCoursesService();
                 setCourses(Array.isArray(courseData) ? courseData : (courseData as any)?.data || []);
             }
         } catch (error) {

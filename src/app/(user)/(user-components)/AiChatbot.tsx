@@ -179,9 +179,7 @@ export default function AiChatbot() {
             {/* Chat Window */}
             {isOpen && (
                 <div
-                    className={`fixed bottom-24 right-6 z-50 flex flex-col bg-white rounded-2xl shadow-2xl border border-gray-100 transition-all duration-300 ${isMinimized ? "h-14 w-80" : "w-96 h-[560px]"
-                        }`}
-                    style={{ maxWidth: "calc(100vw - 48px)" }}
+                    className={`fixed bottom-24 right-3 left-3 sm:left-auto sm:right-6 z-50 flex flex-col bg-white rounded-2xl shadow-2xl border border-gray-100 transition-all duration-300 ${isMinimized ? "h-14" : "h-[500px] sm:h-[560px]"} sm:w-96`}
                 >
                     {/* Header */}
                     <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-t-2xl">

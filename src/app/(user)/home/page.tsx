@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import LandingPro from "../(user-components)/LandingPro";
 import CourseCarousel from "../(user-components)/(course)/course";
 import { GetLandingPageService } from "@/app/service/cms-service";
-import { GetAllCourcesService } from "@/app/service/course-service";
+import { GetAllCoursesService } from "@/app/service/course-service";
 import { GetCoursesListByCourseProviderService } from "@/app/service/course-provider-service"; // Or use standard GetAllCources
 
 export default function Home() {
@@ -17,7 +17,7 @@ export default function Home() {
       try {
         const [landingRes, coursesRes] = await Promise.all([
           GetLandingPageService(),
-          GetAllCourcesService()
+          GetAllCoursesService()
         ]);
         setCmsData(landingRes);
         const courses = (coursesRes as any) as any[];
