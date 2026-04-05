@@ -25,7 +25,7 @@ export default function CategoryCRUD() {
       setLoading(true);
       try {
         const data = await GetAllCategoryService();
-        setCategories(data);
+        setCategories(Array.isArray(data) ? data : (data as any)?.data || []);
       } catch (err) {
         setError("Failed to fetch categories. Please try again.");
       } finally {
@@ -47,7 +47,7 @@ export default function CategoryCRUD() {
     }
     try {
       const newCategoryObj = await CreateCategoryService(newCategory, newDescription);
-      setCategories((prevCategories) => [...prevCategories, newCategoryObj]);
+      setCategories((prevCategories) => [...prevCategories, newCategoryObj as any]);
       setNewCategory("");
       setNewDescription("");
       setError(null);
@@ -80,7 +80,7 @@ export default function CategoryCRUD() {
       
       // Re-fetch updated categories from the database
       const updatedCategories = await GetAllCategoryService();
-      setCategories(updatedCategories);
+      setCategories(Array.isArray(updatedCategories) ? updatedCategories : (updatedCategories as any)?.data || []);
       
       setEditingCategoryId(null);
       setError(null); // Clear error after success

@@ -40,7 +40,7 @@ export default function CourseDetails() {
 
     try {
       const response = await EnrollCourseService(token, id);
-      alert(response.message || "Successfully enrolled.");
+      alert((response as any).message || "Successfully enrolled.");
     } catch (err: any) {
       alert(err.message || "Enrollment failed.");
     }
@@ -55,7 +55,8 @@ export default function CourseDetails() {
 
     try {
       const response = await AddToCartService(token, id);
-      switch (response.data.status) {
+      const status = (response as any).status || (response as any).data?.status;
+      switch (status) {
         case "university_student":
         alert("You're a university student. No need to purchase. Just enrolled!");
         break;

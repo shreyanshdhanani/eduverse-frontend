@@ -47,8 +47,8 @@ export default function CourseDetails() {
         return;
       }
       try {
-        const data = await getCourseDetails(courseId);
-        setCourse(data);
+        const data = await getCourseDetails(courseId as string);
+        setCourse(data as any);
       } catch (err) {
         setError("Failed to load course");
       } finally {

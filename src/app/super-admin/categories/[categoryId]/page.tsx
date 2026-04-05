@@ -42,10 +42,10 @@ export default function SubcategoryPage() {
         setLoading(true);
         try {
           const categoryData = await GetCategoryByIdService(categoryId as string);
-          setCategory(categoryData);
+          setCategory(categoryData as any);
 
           const subcategoryData = await GetSubcategoriesByCategoryService(categoryId as string);
-          setSubcategories(subcategoryData);
+          setSubcategories(Array.isArray(subcategoryData) ? subcategoryData : (subcategoryData as any)?.data || []);
         } catch (err) {
           setError("Failed to fetch category or subcategories.");
         } finally {
@@ -65,7 +65,7 @@ export default function SubcategoryPage() {
     }
     try {
       const newSubcategory = await CreateSubcategoryService(categoryId as string, newSubcategoryName, newSubcategoryDescription);
-      setSubcategories((prev) => [...prev, newSubcategory]);
+      setSubcategories((prev) => [...prev, newSubcategory as any]);
       setNewSubcategoryName("");
       setNewSubcategoryDescription("");
       setError(null);
@@ -98,7 +98,7 @@ export default function SubcategoryPage() {
     try {
       await UpdateSubcategoryService(id, updatedName, updatedDescription);
       const updatedSubcategories = await GetSubcategoriesByCategoryService(categoryId as string);
-      setSubcategories(updatedSubcategories);
+      setSubcategories(Array.isArray(updatedSubcategories) ? updatedSubcategories : (updatedSubcategories as any)?.data || []);
       setEditingSubcategoryId(null);
       setError(null);
     } catch (err) {

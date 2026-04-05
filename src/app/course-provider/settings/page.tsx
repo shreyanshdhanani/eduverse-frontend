@@ -94,12 +94,12 @@ const CourseProviderSettings = () => {
     }
   }, [profile.expertiseSubcategory]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setProfile((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleProfilePictureChange = (e) => {
+  const handleProfilePictureChange = (e: any) => {
     const file = e.target.files[0];
     if (file) {
       setProfile((prev) => ({ ...prev, profilePicture: file }));
@@ -110,11 +110,11 @@ const CourseProviderSettings = () => {
     try {
       const formData = new FormData();
       for (const key in profile) {
-        formData.append(key, profile[key]);
+        formData.append(key, (profile as any)[key]);
       }
 
       await ProfileService(formData);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating profile:", error);
       alert(error.message || "Profile update failed.");
     }

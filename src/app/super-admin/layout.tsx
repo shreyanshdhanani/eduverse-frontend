@@ -137,13 +137,6 @@ export default function AdminLayout({ children }: any) {
             <a href="/" className="text-sm text-gray-500 hover:text-purple-600 transition font-medium">
               ← Back to Site
             </a>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-red-500 hover:bg-red-50 rounded-lg transition"
-            >
-              <LogOut size={15} />
-              Logout
-            </button>
           </div>
         </header>
 

@@ -42,10 +42,10 @@ export default function TopicPage() {
         setLoading(true);
         try {
           const subcategoryData = await GetSubcategoryByIdService(subcategoryId as string);
-          setsubCategory(subcategoryData);
+          setsubCategory(subcategoryData as any);
           
           const topicsData = await GetTopicsBySubcategoryService(subcategoryId as string);
-          setTopics(topicsData);
+          setTopics(Array.isArray(topicsData) ? topicsData : (topicsData as any)?.data || []);
         } catch (err) {
           setError("Failed to fetch topics.");
         } finally {
@@ -69,7 +69,7 @@ export default function TopicPage() {
       const newTopic = await CreateTopicService(subcategoryId as string, newTopicName, newTopicDescription);
       
       // After successful topic creation, update the topics list
-      setTopics((prev) => [...prev, newTopic]);
+      setTopics((prev) => [...prev, newTopic as any]);
       setNewTopicName("");
       setNewTopicDescription("");
       setError(null);
@@ -99,7 +99,7 @@ const handleSaveEdit = async (id: string, updatedName: string, updatedDescriptio
     const topicsData = await GetTopicsBySubcategoryService(subcategoryId as string);
     // Update the local state with the updated topic data immediately after the update
     setEditingTopicId(null);
-    setTopics(topicsData);
+    setTopics(Array.isArray(topicsData) ? topicsData : (topicsData as any)?.data || []);
     setOriginalTopicData(null);
     setError(null);
   } catch (err) {

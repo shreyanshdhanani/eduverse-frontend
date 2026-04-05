@@ -1,11 +1,10 @@
-import axios, { AxiosError } from 'axios';
-
-const API_URL = process.env.API_URL || 'http://localhost:3020/api';
+import { AxiosError } from 'axios';
+import axiosInstance from './axiosInstance';
 
 export const GetOneTopicService = async(id: string)=>{
   try {
-    const response = await axios.get(`${API_URL}/topic/get-one/${id}`);
-    return response.data;
+    const response = await axiosInstance.get(`/topic/get-one/${id}`);
+    return response;
   } catch (error) {
     throw new Error('Failed to get topic.');
   }
@@ -13,48 +12,48 @@ export const GetOneTopicService = async(id: string)=>{
 
 export const GetAllTopicsService = async()=>{
   try {
-    const response = await axios.get(`${API_URL}/topic`);
-    return response.data;
+    const response = await axiosInstance.get(`/topic`);
+    return response;
   } catch (error) {
-    throw new Error('Failed to fetch subcategories.');
+    throw new Error('Failed to fetch topics.');
   }
 }
 export const GetSubcategoryByIdService = async(subcategoryId: string)=>{
     try {
-        const response = await axios.get(`${API_URL}/topic/sub-category/${subcategoryId}`);
-        return response.data;
+        const response = await axiosInstance.get(`/topic/sub-category/${subcategoryId}`);
+        return response;
       } catch (error) {
-        throw new Error('Failed to fetch subcategories.');
+        throw new Error('Failed to fetch subcategory details.');
       }
 } 
 export const GetTopicsBySubcategoryService = async(subcategoryId: string)=>{
     try {
-        const response = await axios.get(`${API_URL}/topic/${subcategoryId}`);
-        return response.data;
+        const response = await axiosInstance.get(`/topic/${subcategoryId}`);
+        return response;
       } catch (error) {
-        throw new Error('Failed to fetch subcategories.');
+        throw new Error('Failed to fetch topics.');
       }
 }
 export const CreateTopicService = async(subcategoryId : string, newTopicName: string, newTopicDescription: string)=>{
     try {
-        const response = await axios.post(`${API_URL}/topic`, {
+        const response = await axiosInstance.post(`/topic`, {
             name: newTopicName,
             description: newTopicDescription,
             subCategory: subcategoryId
         });
-        return response.data;
+        return response;
       } catch (error) {
-        throw new Error('Failed to fetch subcategories.');
+        throw new Error('Failed to create topic.');
       }
 } 
 
 export const UpdateTopicService = async(id: string, updatedName: string, updatedDescription: string)=>{
     try {
-        const response = await axios.patch(`${API_URL}/topic/${id}`, {
+        const response = await axiosInstance.patch(`/topic/${id}`, {
             name: updatedName,
             description: updatedDescription,
         });
-        return response.data;
+        return response;
     } catch (error: unknown) {
         if (error instanceof AxiosError) {
             const errorMessage = error.response?.data?.message || "Failed to update topic.";
@@ -66,9 +65,9 @@ export const UpdateTopicService = async(id: string, updatedName: string, updated
 } 
 export const DeleteTopicService = async(id: string)=>{
     try {
-        const response = await axios.delete(`${API_URL}/topic/${id}`,)
-        return response.data;
+        const response = await axiosInstance.delete(`/topic/${id}`,)
+        return response;
       } catch (error) {
-        throw new Error('Failed to fetch subcategories.');
+        throw new Error('Failed to delete topic.');
       }
 }  
