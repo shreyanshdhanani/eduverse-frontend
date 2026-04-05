@@ -265,7 +265,7 @@ export default function LandingPro({ data, featuredCourse }: { data: LandingData
                     Get Started Free
                   </button>
                 </Link>
-                <Link href="/courses">
+                <Link href="/course">
                    <button className="px-10 py-4 border-2 border-white/30 text-white rounded-xl font-bold text-lg hover:bg-white/10 transition">
                     Browse All Courses
                   </button>
