@@ -5,6 +5,8 @@ import { GetAllCoursesService } from "@/app/service/course-service";
 import { Search, BookOpen, Clock, Users, Star } from "lucide-react";
 import Image from "next/image";
 
+import { getAssetUrl } from "@/app/utils/asset-url";
+
 interface Course {
     _id: string;
     title: string;
@@ -82,10 +84,7 @@ export default function UniversityCourses() {
 }
 
 function CourseCard({ course }: { course: Course }) {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3020/api";
-    const imageUrl = course.thumbnailImage 
-        ? `${API_URL}/upload/courses/${course.thumbnailImage}` 
-        : "/hero.jpg";
+    const imageUrl = getAssetUrl(course.thumbnailImage);
 
     return (
         <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col group">
