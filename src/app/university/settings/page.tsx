@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { GetUniversityProfile, UpdateUniversityProfile } from "@/app/service/university-service";
 import { Camera, Save, Globe, Mail, Phone, MapPin, Building, Link as LinkIcon } from "lucide-react";
 import Image from "next/image";
+import { getAssetUrl } from "@/app/utils/asset-url";
 
 export default function UniversitySettings() {
     const [profile, setProfile] = useState<any>(null);
@@ -72,8 +73,7 @@ export default function UniversitySettings() {
         );
     }
 
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3020/api";
-    const currentLogo = profile?.logo ? `${API_URL}/upload/university/${profile.logo}` : "/default_user.png";
+    const currentLogo = profile?.logo ? getAssetUrl(profile.logo) : "/default_user.png";
 
     return (
         <div className="max-w-4xl mx-auto space-y-8">

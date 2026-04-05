@@ -113,7 +113,7 @@ export default function CourseList() {
                           <div className="flex items-center gap-3">
                             {course.thumbnail ? (
                               <img
-                                src={getAssetUrl(`courses/${course.thumbnail}`)}
+                                src={getAssetUrl(course.thumbnail)}
                                 alt={course.title}
                                 className="w-12 h-12 rounded-xl object-cover border border-gray-100 flex-shrink-0"
                               />
@@ -176,7 +176,7 @@ export default function CourseList() {
                   <div className="flex items-start gap-3 mb-3">
                     {course.thumbnail ? (
                       <img
-                        src={getAssetUrl(`courses/${course.thumbnail}`)}
+                        src={getAssetUrl(course.thumbnail)}
                         alt={course.title}
                         className="w-14 h-14 rounded-xl object-cover flex-shrink-0 border border-gray-100"
                       />

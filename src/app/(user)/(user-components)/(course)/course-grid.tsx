@@ -168,7 +168,7 @@ const CourseGrid = () => {
                                 {/* Thumbnail */}
                                 <div className="relative w-full h-48 overflow-hidden">
                                     <Image
-                                        src={getAssetUrl(`courses/${course.thumbnail}`)}
+                                        src={getAssetUrl(course.thumbnail)}
                                         alt={course.title}
                                         layout="fill"
                                         objectFit="cover"

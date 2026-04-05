@@ -205,7 +205,7 @@ const CoursePage = () => {
                   {/* Thumbnail */}
                   <div className="relative w-full aspect-video overflow-hidden">
                     <Image
-                      src={getAssetUrl(`courses/${course.thumbnail}`)}
+                      src={getAssetUrl(course.thumbnail)}
                       alt={course.title}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-500"

@@ -176,7 +176,7 @@ const ShoppingCart = () => {
                 {/* Thumbnail */}
                 <div className="w-full sm:w-44 h-32 sm:h-auto flex-shrink-0">
                   <img
-                    src={getAssetUrl(`courses/${course.thumbnail}`)}
+                    src={getAssetUrl(course.thumbnail)}
                     alt={course.title}
                     className="w-full h-full object-cover rounded-xl group-hover:scale-[1.03] transition-transform duration-500"
                     onError={(e) => {

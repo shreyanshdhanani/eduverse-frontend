@@ -49,7 +49,7 @@ export default function CourseDetails() {
 
       try {
         const courseData = await getCourseDetails(courseId);
-        setCourse(courseData);
+        setCourse(courseData as any);
       } catch (err) {
         setError("Failed to fetch course details.");
       } finally {
@@ -69,7 +69,7 @@ export default function CourseDetails() {
       {/* Thumbnail and Preview */}
       <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden">
         <Image
-          src={getAssetUrl(`courses/${course.thumbnail}`)}
+          src={getAssetUrl(course.thumbnail)}
           alt={course.title}
           fill
           style={{ objectFit: "cover" }}
@@ -77,7 +77,7 @@ export default function CourseDetails() {
         {course.previewVideo && (
           <div className="absolute inset-0 bg-black bg-opacity-40 flex justify-center items-center">
             <a
-              href={getAssetUrl(`courses/${course.previewVideo}`)}
+              href={getAssetUrl(course.previewVideo)}
               target="_blank"
               rel="noopener noreferrer"
               className="text-white bg-black bg-opacity-50 px-6 py-3 rounded-full flex items-center gap-2 hover:bg-opacity-80"

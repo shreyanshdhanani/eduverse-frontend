@@ -97,7 +97,7 @@ export default function EnrolledCoursesPage() {
                 {/* Thumbnail */}
                 <div className="relative aspect-video overflow-hidden">
                   <img
-                    src={getAssetUrl(`courses/${course.thumbnail}`)}
+                    src={getAssetUrl(course.thumbnail)}
                     alt={course.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />

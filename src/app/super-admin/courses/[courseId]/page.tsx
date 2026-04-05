@@ -67,7 +67,7 @@ export default function CourseDetails() {
       {/* Thumbnail with Preview */}
       <div className="relative h-80 rounded-lg overflow-hidden shadow-md">
         <Image
-          src={getAssetUrl(`courses/${course.thumbnail}`)}
+          src={getAssetUrl(course.thumbnail)}
           alt="Course thumbnail"
           layout="fill"
           objectFit="cover"
@@ -75,7 +75,7 @@ export default function CourseDetails() {
         {course.previewVideo && (
           <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
             <a
-              href={getAssetUrl(`courses/${course.previewVideo}`)}
+              href={getAssetUrl(course.previewVideo)}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-purple-600 text-white px-5 py-3 rounded-full flex items-center gap-3 hover:bg-purple-700 transition-transform duration-200"

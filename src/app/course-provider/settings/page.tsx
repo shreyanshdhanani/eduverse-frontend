@@ -126,7 +126,7 @@ const CourseProviderSettings = () => {
       <div className="flex flex-col items-center">
         <div className="relative w-24 h-24">
           <img
-            src={profile.profilePicture ? getAssetUrl(`course-providers/profile/${profile.profilePicture}`) : "/default_user.png"} 
+            src={profile.profilePicture ? getAssetUrl(profile.profilePicture as string) : "/default_user.png"} 
             alt="Profile"
             className="w-24 h-24 rounded-full border-4 border-gray-300 object-cover"
           />
@@ -155,7 +155,7 @@ const CourseProviderSettings = () => {
       <input
         type="text"
         name={field}
-        value={profile[field] || ""}
+        value={(profile as any)[field] || ""}
         onChange={handleChange}
         disabled={["email", "name", "phone"].includes(field)} // Disable these fields
         className={`w-full p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 transition ${

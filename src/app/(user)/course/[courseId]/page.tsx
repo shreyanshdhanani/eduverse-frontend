@@ -82,7 +82,7 @@ export default function CourseDetails() {
       {/* Hero Section */}
       <div className="relative h-[500px]">
         <img
-          src={getAssetUrl(`courses/${course.thumbnail}`)}
+          src={getAssetUrl(course.thumbnail)}
           alt={course.title}
           className="w-full h-full object-cover brightness-75"
         />
