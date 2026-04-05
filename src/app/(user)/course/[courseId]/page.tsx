@@ -54,8 +54,8 @@ export default function CourseDetails() {
     }
 
     try {
-      const response = await AddToCartService(token, id);
-      const status = (response as any).status || (response as any).data?.status;
+      const response = await AddToCartService(id);
+      const status = (response as any).status;
       switch (status) {
         case "university_student":
         alert("You're a university student. No need to purchase. Just enrolled!");

@@ -7,7 +7,7 @@ export const GetAllCartCoursesService = async () => {
       const response: any = await axiosInstance.get(`/cart`);
       // Cart response could be directly the array or { courses: [...] } 
       // based on CartController, it returns this.cartService.getCartCourses(user._id)
-      return response; 
+      return response.data; 
     } catch (error) {
       console.error("Error fetching cart courses:", error);
       throw error;
@@ -17,7 +17,7 @@ export const GetAllCartCoursesService = async () => {
 export const AddToCartService = async (courseId: string) => {
   try {
     const response = await axiosInstance.post(`/cart/add/${courseId}`);
-    return response;
+    return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
       const errorMessage =
@@ -32,7 +32,7 @@ export const AddToCartService = async (courseId: string) => {
 export const RemoveFromCartService = async (courseId: string) => {
     try {
       const response = await axiosInstance.delete(`/cart/remove/${courseId}`);
-      return response;
+      return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         const errorMessage =
@@ -49,7 +49,7 @@ export const CreateCheckoutSessionService = async(cartCourses: any[]) => {
     const response = await axiosInstance.post(`/stripe/create-checkout-session`, {
       cartCourses,
     });
-    return response;
+    return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
       const errorMessage =
