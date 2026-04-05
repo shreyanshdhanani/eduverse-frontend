@@ -107,70 +107,104 @@ const StudentRegistrationPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-white">
-      <div className="flex w-3/5 rounded-lg overflow-hidden">
-        <div className="w-1/2 flex justify-center items-center">
-          <img src="/login_student.svg" alt="Login Illustration" className="w-full h-auto object-cover" />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-indigo-50">
+      <div className="w-full max-w-4xl mx-4 flex bg-white rounded-2xl shadow-2xl overflow-hidden">
+        {/* Left Side Illustration */}
+        <div className="hidden md:flex w-1/2 bg-gradient-to-br from-purple-600 to-indigo-600 items-center justify-center p-10 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+          <div className="relative z-10 text-center">
+            <img src="/login_student.svg" alt="Registration Illustration" className="w-full max-w-xs mx-auto drop-shadow-2xl" />
+            <h2 className="text-white text-2xl font-bold mt-6">Join Eduverse Today!</h2>
+            <p className="text-purple-200 text-sm mt-2">Start your learning journey with the best resources and a global community.</p>
+          </div>
         </div>
 
-        <div className="w-1/2 p-10">
-          <h2 className="text-2xl font-bold mb-6 text-gray-900">Sign up with email</h2>
-
-          <div className="relative mb-4">
-            <input
-              type="text"
-              placeholder="Full Name"
-              className="w-full border border-gray-300 p-3 rounded"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-            />
-            <FaUser className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+        {/* Right Side Form */}
+        <div className="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-center">
+          {/* Logo */}
+          <div className="mb-8 text-center md:text-left">
+            <h1 className="text-2xl font-bold">
+              <span className="text-gray-900">E</span>
+              <span className="text-purple-600">duverse</span>
+            </h1>
+            <h2 className="text-xl font-bold text-gray-900 mt-2">Create Account</h2>
+            <p className="text-gray-500 text-sm mt-1">Fill in the details to register as a student</p>
           </div>
 
-          <div className="relative mb-4">
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full border border-gray-300 pr-10 p-3 rounded"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <FaEnvelope className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Full Name */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5 text-left">Full Name</label>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="John Doe"
+                  className="w-full border border-gray-200 bg-gray-50 rounded-xl px-4 py-3 pr-11 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                />
+                <FaUser className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" />
+              </div>
+            </div>
 
-          <div className="relative mb-4">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              className="w-full border border-gray-300 p-3 rounded pr-10"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            {/* Email Address */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5 text-left">Email Address</label>
+              <div className="relative">
+                <input
+                  type="email"
+                  placeholder="you@example.com"
+                  className="w-full border border-gray-200 bg-gray-50 rounded-xl px-4 py-3 pr-11 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <FaEnvelope className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" />
+              </div>
+            </div>
+
+            {/* Password */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5 text-left">Password</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Create a strong password"
+                  className="w-full border border-gray-200 bg-gray-50 rounded-xl px-4 py-3 pr-11 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+            </div>
+
+            {/* Submit Button */}
             <button
-              type="button"
-              onClick={togglePasswordVisibility}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+              type="submit"
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 mt-2 shadow-lg shadow-purple-600/20 active:scale-95"
             >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
+              Sign Up for Free
             </button>
-          </div>
+          </form>
 
-          <button
-            onClick={handleSubmit}
-            className="w-full bg-purple-600 text-white p-3 rounded font-semibold flex justify-center items-center"
-          >
-            Sign up with email
-          </button>
-
-          <div className="mt-6 border-t border-gray-300 pt-4 text-center">
-            <p className="text-gray-600">
-              Already have an account? <a href="/user-login" className="text-purple-600 font-semibold">Log in</a>
+          {/* Footer Navigation */}
+          <div className="mt-8 text-center border-t border-gray-100 pt-6">
+            <p className="text-gray-500 text-sm">
+              Already have an account?{" "}
+              <a href="/user-login" className="text-purple-600 font-semibold hover:underline">
+                Sign in here
+              </a>
             </p>
           </div>
         </div>
       </div>
 
-      {/* ✅ Toast Notification Container */}
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
