@@ -27,7 +27,7 @@ export default function AdminDashboard() {
     const fetchDashboardData = async () => {
       try {
         const response = await Dashboard();
-        setDashboardData(response.data);
+        setDashboardData(response);
       } catch (error) {
         console.error("Error fetching dashboard data", error);
       } finally {

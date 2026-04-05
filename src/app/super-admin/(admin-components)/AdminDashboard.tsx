@@ -16,7 +16,7 @@ import {
 import "chart.js/auto";
 import { Dashboard } from "@/app/service/super-admin.service";
 
-const API_URL = process.env.API_URL || "http://localhost:3020/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3020/api";
 
 export default function AdminDashboard() {
   const [dashboardData, setDashboardData] = useState({

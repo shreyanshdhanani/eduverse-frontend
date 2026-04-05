@@ -88,7 +88,14 @@ export default function WhyChooseUsPage() {
     return (
         <div className="min-h-screen bg-white">
             {/* Hero */}
-            <section className="relative bg-gradient-to-br from-indigo-900 via-purple-800 to-violet-700 text-white overflow-hidden">
+            <section 
+                className="relative text-white overflow-hidden"
+                style={{ 
+                    backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/image2.jpg')",
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center' 
+                }}
+            >
                 <div className="absolute inset-0 opacity-10">
                     <div className="absolute -top-20 -left-20 w-96 h-96 bg-white rounded-full blur-3xl" />
                     <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-indigo-300 rounded-full blur-3xl" />

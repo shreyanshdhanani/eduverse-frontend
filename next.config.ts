@@ -11,8 +11,12 @@ const nextConfig: NextConfig = {
       {
         protocol: "http",
         hostname: "localhost",
-        port: "3020",
-        pathname: "/api/upload/courses/**",
+        pathname: "/api/upload/**",
+      },
+      {
+        protocol: "https",
+        hostname: "eduversebackend-w2gk.onrender.com",
+        pathname: "/api/upload/**",
       },
       {
         protocol: "https",

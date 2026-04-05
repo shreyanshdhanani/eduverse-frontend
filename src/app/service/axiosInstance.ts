@@ -27,9 +27,14 @@ axiosInstance.interceptors.response.use(
     if (response.data && response.data.success === true && response.data.data !== undefined) {
       return response.data.data; // Return ONLY the payload
     }
-    return response.data; // Return the whole body if it doesn't match the wrapper
+    // Handle cases where the backend response might have been wrapped already or returned directly
+    return response.data; 
   },
   (error) => {
+    // Log the error for better visibility
+    if (error.response) {
+      console.error('API Error Response:', error.response.data);
+    }
     return Promise.reject(error);
   },
 );

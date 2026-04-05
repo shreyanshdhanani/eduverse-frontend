@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { EnrollCourseService, GetCourseDetailsService } from "@/app/service/course-service";
 import { AddToCartService } from "@/app/service/cart-service";
+import { getAssetUrl } from "@/app/utils/asset-url";
 
 export default function CourseDetails() {
   const params = useParams();
@@ -80,7 +81,7 @@ export default function CourseDetails() {
       {/* Hero Section */}
       <div className="relative h-[500px]">
         <img
-          src={`http://localhost:3020/api/upload/courses/${course.thumbnail}`}
+          src={getAssetUrl(`courses/${course.thumbnail}`)}
           alt={course.title}
           className="w-full h-full object-cover brightness-75"
         />

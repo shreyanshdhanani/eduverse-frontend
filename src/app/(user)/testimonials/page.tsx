@@ -82,7 +82,14 @@ export default function TestimonialsPage() {
     return (
         <div className="min-h-screen bg-white">
             {/* Hero */}
-            <section className="relative bg-gradient-to-br from-purple-900 via-indigo-800 to-violet-700 text-white overflow-hidden">
+            <section 
+                className="relative text-white overflow-hidden"
+                style={{ 
+                    backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/hero.jpg')",
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center' 
+                }}
+            >
                 <div className="absolute inset-0 opacity-10">
                     <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-300 rounded-full blur-3xl" />
                     <div className="absolute bottom-0 left-0 w-80 h-80 bg-purple-300 rounded-full blur-3xl" />

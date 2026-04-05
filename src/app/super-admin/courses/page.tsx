@@ -5,6 +5,7 @@ import { Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { GetAllCourse, CourseStatusService } from "@/app/service/super-admin.service"; // Ensure you have the appropriate service
 import { FaCheckCircle, FaTimesCircle, FaClock } from "react-icons/fa";
+import { getAssetUrl } from "@/app/utils/asset-url";
 
 interface Course {
   _id: string;
@@ -26,7 +27,7 @@ export default function CourseList() {
       setLoading(true);
       try {
         const coursesData = await GetAllCourse();
-        setCourses(coursesData);
+        setCourses(Array.isArray(coursesData) ? coursesData : (coursesData as any)?.data || []);
       } catch (err) {
         setError("Failed to fetch courses.");
       } finally {
@@ -93,7 +94,7 @@ export default function CourseList() {
                   <td className="p-3">
                     {course.thumbnail && (
                       <img
-                        src={`http://localhost:3020/api/upload/courses/${course.thumbnail}`}
+                        src={getAssetUrl(`courses/${course.thumbnail}`)}
                         alt={course.title}
                         className="w-20 h-20 rounded-md shadow"
                       />

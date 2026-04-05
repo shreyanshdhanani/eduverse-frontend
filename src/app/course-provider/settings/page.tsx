@@ -6,6 +6,7 @@ import { GetSubcategoriesByCategoryService } from "@/app/service/subcategory-ser
 import { GetTopicsBySubcategoryService } from "@/app/service/topic-service";
 import { FaCamera } from "react-icons/fa";
 import { getProfile, ProfileService } from "@/app/service/course-provider-service";
+import { getAssetUrl } from "@/app/utils/asset-url";
 
 const CourseProviderSettings = () => {
   const [profile, setProfile] = useState({
@@ -25,9 +26,9 @@ const CourseProviderSettings = () => {
     profilePicture: "",
   });
 
-  const [categories, setCategories] = useState([]);
-  const [subcategories, setSubcategories] = useState([]);
-  const [topics, setTopics] = useState([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [subcategories, setSubcategories] = useState<any[]>([]);
+  const [topics, setTopics] = useState<any[]>([]);
 
   // Fetch profile on mount
   useEffect(() => {
@@ -36,12 +37,13 @@ const CourseProviderSettings = () => {
         const userProfile = await getProfile();
   
         if (userProfile) {
+          const profileData = userProfile as any;
           setProfile((prev) => ({
             ...prev,
-            ...userProfile,
-            name: userProfile.courseProvider?.name || "",
-            email: userProfile.courseProvider?.email || "",
-            phone: userProfile.courseProvider?.phone || "",
+            ...profileData,
+            name: profileData.courseProvider?.name || "",
+            email: profileData.courseProvider?.email || "",
+            phone: profileData.courseProvider?.phone || profileData.phone || "",
           }));
         }
       } catch (error) {
@@ -56,7 +58,7 @@ const CourseProviderSettings = () => {
     const fetchCategories = async () => {
       try {
         const response = await GetAllCategoryService();
-        setCategories(response);
+        setCategories(Array.isArray(response) ? response : (response as any)?.data || []);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -69,7 +71,7 @@ const CourseProviderSettings = () => {
       const fetchSubcategories = async () => {
         try {
           const response = await GetSubcategoriesByCategoryService(profile.expertiseCategory);
-          setSubcategories(response);
+          setSubcategories(Array.isArray(response) ? response : (response as any)?.data || []);
         } catch (error) {
           console.error("Error fetching subcategories:", error);
         }
@@ -83,7 +85,7 @@ const CourseProviderSettings = () => {
       const fetchTopics = async () => {
         try {
           const response = await GetTopicsBySubcategoryService(profile.expertiseSubcategory);
-          setTopics(response);
+          setTopics(Array.isArray(response) ? response : (response as any)?.data || []);
         } catch (error) {
           console.error("Error fetching topics:", error);
         }
@@ -124,7 +126,7 @@ const CourseProviderSettings = () => {
       <div className="flex flex-col items-center">
         <div className="relative w-24 h-24">
           <img
-            src={profile.profilePicture ? `http://localhost:3020/api/upload/course-providers/profile/${profile.profilePicture}` : "/default_user.png"} 
+            src={profile.profilePicture ? getAssetUrl(`course-providers/profile/${profile.profilePicture}`) : "/default_user.png"} 
             alt="Profile"
             className="w-24 h-24 rounded-full border-4 border-gray-300 object-cover"
           />

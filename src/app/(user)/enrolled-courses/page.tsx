@@ -2,8 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { GetEnrolledCoursesService } from "@/app/service/enrolled-service";
-
-const API_URL = process.env.API_URL || "http://localhost:3020/api";
+import { getAssetUrl } from "@/app/utils/asset-url";
 
 export default function EnrolledCoursesPage() {
   const router = useRouter();
@@ -48,7 +47,7 @@ export default function EnrolledCoursesPage() {
               className="border rounded-lg p-4 shadow bg-white"
             >
               <img
-                src={`${API_URL}/upload/courses/${course.thumbnail}`}
+                src={getAssetUrl(`courses/${course.thumbnail}`)}
                 alt={course.title}
                 className="w-full h-40 object-cover rounded"
               />

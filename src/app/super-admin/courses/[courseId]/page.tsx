@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { getCourseDetails } from "@/app/service/course-provider-service";
+import { getAssetUrl } from "@/app/utils/asset-url";
 import Image from "next/image";
 import { PlayCircle } from "lucide-react";
 import { PiMedalLight } from "react-icons/pi";
@@ -66,7 +67,7 @@ export default function CourseDetails() {
       {/* Thumbnail with Preview */}
       <div className="relative h-80 rounded-lg overflow-hidden shadow-md">
         <Image
-          src={`http://localhost:3020/api/upload/courses/${course.thumbnail}`}
+          src={getAssetUrl(`courses/${course.thumbnail}`)}
           alt="Course thumbnail"
           layout="fill"
           objectFit="cover"
@@ -74,7 +75,7 @@ export default function CourseDetails() {
         {course.previewVideo && (
           <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
             <a
-              href={`http://localhost:3020/api/upload/courses/${course.previewVideo}`}
+              href={getAssetUrl(`courses/${course.previewVideo}`)}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-purple-600 text-white px-5 py-3 rounded-full flex items-center gap-3 hover:bg-purple-700 transition-transform duration-200"
@@ -143,7 +144,7 @@ export default function CourseDetails() {
                   {section.videos.map((video, i) => (
                     <li key={i}>
                       <a
-                        href={`http://localhost:3020/api${video}`}
+                        href={getAssetUrl(video)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-600 hover:underline"

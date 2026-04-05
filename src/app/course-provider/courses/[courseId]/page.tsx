@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { getCourseDetails } from "@/app/service/course-provider-service";
 import { PlayCircle } from "lucide-react";
 import Image from "next/image";
+import { getAssetUrl } from "@/app/utils/asset-url";
 
 interface CourseSection {
   _id: string;
@@ -68,7 +69,7 @@ export default function CourseDetails() {
       {/* Thumbnail and Preview */}
       <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden">
         <Image
-          src={`http://localhost:3020/api/upload/courses/${course.thumbnail}`}
+          src={getAssetUrl(`courses/${course.thumbnail}`)}
           alt={course.title}
           fill
           style={{ objectFit: "cover" }}
@@ -76,7 +77,7 @@ export default function CourseDetails() {
         {course.previewVideo && (
           <div className="absolute inset-0 bg-black bg-opacity-40 flex justify-center items-center">
             <a
-              href={`http://localhost:3020/api/upload/courses/${course.previewVideo}`}
+              href={getAssetUrl(`courses/${course.previewVideo}`)}
               target="_blank"
               rel="noopener noreferrer"
               className="text-white bg-black bg-opacity-50 px-6 py-3 rounded-full flex items-center gap-2 hover:bg-opacity-80"
@@ -130,7 +131,7 @@ export default function CourseDetails() {
                 {section.videos.map((video, idx) => (
                   <li key={idx}>
                     <a
-                      href={`http://localhost:3020/api${video}`}
+                      href={getAssetUrl(video)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600 hover:underline"

@@ -11,6 +11,7 @@ import { GetSubcategoriesByCategoryService } from "@/app/service/subcategory-ser
 import { GetCoursesByCategoryService } from "@/app/service/course-provider-service";
 import { useRouter } from "next/navigation";
 import { GetAllCourcesService } from "@/app/service/course-service";
+import { getAssetUrl } from "@/app/utils/asset-url";
 
 // ** Carousel Settings **
 const settings = {
@@ -41,7 +42,7 @@ const CoursePage = () => {
     const fetchAllCourses = async () => {
       try {
         const courseData = await GetAllCourcesService();
-        setCourses(courseData);
+        setCourses(Array.isArray(courseData) ? courseData : (courseData as any)?.data || []);
       } catch (error) {
         console.error("Error fetching courses:", error);
       }
@@ -55,11 +56,12 @@ const CoursePage = () => {
     const fetchCategories = async () => {
       try {
         const categoryData = await GetAllCategoryService();
-        setCategories(categoryData);
+        const categoriesArray = Array.isArray(categoryData) ? categoryData : (categoryData as any)?.data || [];
+        setCategories(categoriesArray);
 
-        if (categoryData.length > 0) {
-          setActiveCategory(categoryData[0]._id);
-          fetchSubcategories(categoryData[0]._id);
+        if (categoriesArray.length > 0) {
+          setActiveCategory(categoriesArray[0]._id);
+          fetchSubcategories(categoriesArray[0]._id);
         }
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -73,7 +75,7 @@ const CoursePage = () => {
   const fetchSubcategories = async (categoryId: string) => {
     try {
       const subcategoryData = await GetSubcategoriesByCategoryService(categoryId);
-      setSubcategories(subcategoryData);
+      setSubcategories(Array.isArray(subcategoryData) ? subcategoryData : (subcategoryData as any)?.data || []);
     } catch (error) {
       console.error("Error fetching subcategories:", error);
     }
@@ -88,7 +90,7 @@ const CoursePage = () => {
       } else {
         courseData = await GetAllCourcesService(); // If no category, fetch all courses
       }
-      setCourses(courseData);
+      setCourses(Array.isArray(courseData) ? courseData : (courseData as any)?.data || []);
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
@@ -157,7 +159,7 @@ const CoursePage = () => {
           {/* Course Thumbnail */}
           <div className="relative w-full h-40">
             <Image
-              src={`http://localhost:3020/api/upload/courses/${course.thumbnail}`}
+              src={getAssetUrl(`courses/${course.thumbnail}`)}
               alt={course.title}
               layout="fill"
               objectFit="cover"

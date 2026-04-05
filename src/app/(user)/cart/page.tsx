@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Tag } from "lucide-react";
 import { CreateCheckoutSessionService, GetAllCartCoursesService } from "@/app/service/cart-service";
+import { getAssetUrl } from "@/app/utils/asset-url";
 
 const ShoppingCart = () => {
   const router = useRouter();
@@ -72,7 +73,7 @@ const ShoppingCart = () => {
           >
             <div className="flex gap-4">
               <img
-                src={`http://localhost:3020/api/upload/courses/${course.thumbnail}`}
+                src={getAssetUrl(`courses/${course.thumbnail}`)}
                 alt={course.title}
                 className="w-20 h-20 object-cover rounded"
               />

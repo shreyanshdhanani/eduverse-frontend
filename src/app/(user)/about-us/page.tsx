@@ -78,7 +78,14 @@ export default function AboutUsPage() {
     return (
         <div className="min-h-screen bg-white">
             {/* Hero Section */}
-            <section className="relative bg-gradient-to-br from-purple-900 via-purple-700 to-indigo-800 text-white overflow-hidden">
+            <section 
+                className="relative text-white overflow-hidden"
+                style={{ 
+                    backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/image1.jpg')",
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center' 
+                }}
+            >
                 <div className="absolute inset-0 opacity-10">
                     <div className="absolute top-10 left-10 w-72 h-72 bg-white rounded-full blur-3xl" />
                     <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-300 rounded-full blur-3xl" />

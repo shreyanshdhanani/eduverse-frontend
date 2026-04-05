@@ -27,13 +27,13 @@ export default function Header() {
     if (token) {
       setIsLoggedIn(true);
       axios
-        .get("http://localhost:3020/api/auth/verify-token", {
+        .get(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
         .then((response) => {
-          setRole(response.data.role);
+          setRole(response.data.data.role);
         })
         .catch((error) => {
           console.error("Token verification failed:", error);
