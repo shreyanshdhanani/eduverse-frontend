@@ -109,9 +109,9 @@ const CourseProviderSettings = () => {
   const handleSave = async () => {
     try {
       const formData = new FormData();
-      for (const key in profile) {
-        formData.append(key, (profile as any)[key]);
-      }
+      Object.entries(profile).forEach(([key, value]) => {
+        formData.append(key, value as string | Blob);
+      });
 
       await ProfileService(formData);
     } catch (error: any) {

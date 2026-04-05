@@ -47,11 +47,11 @@ export default function Home() {
       <LandingPro data={cmsData || {}} featuredCourse={featuredCourse} />
 
       {/* 2. Existing Course Selection / Categories */}
-      <div className="bg-gray-50/50 py-20">
-         <div className="container mx-auto px-6">
-            <div className="text-center mb-12">
-               <h2 className="text-3xl font-bold text-gray-900">Explore Our Featured Courses</h2>
-               <p className="text-gray-500 mt-2">Find the perfect course to kickstart your next career move</p>
+      <div className="bg-gray-50/50 py-12 sm:py-16 lg:py-20">
+         <div className="container mx-auto px-4 sm:px-6">
+            <div className="text-center mb-8 sm:mb-12">
+               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Explore Our Featured Courses</h2>
+               <p className="text-gray-500 mt-2 text-sm sm:text-base">Find the perfect course to kickstart your next career move</p>
             </div>
             <CourseCarousel />
          </div>
