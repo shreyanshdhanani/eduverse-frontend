@@ -1,12 +1,11 @@
 import { AxiosError } from 'axios';
-import axios from 'axios';
+import axiosInstance from './axiosInstance';
 
-const API_URL = process.env.API_URL || 'http://localhost:3020/api';
-
-export const GetEnrolledCoursesService = async (token: string) => {
+export const GetEnrolledCoursesService = async () => {
     try {
-      const response = await axios.post(`${API_URL}/enrollment/enrolled-courses`, { token });
-      return response.data.courses;
+      const response: any = await axiosInstance.get(`/enrollment/enrolled-courses`);
+      // The backend returns { courses: [...] }
+      return response.courses || [];
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         const errorMessage =
