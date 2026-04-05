@@ -68,55 +68,84 @@ const ForgotPasswordPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-white">
-      <div className="flex w-3/5 rounded-lg overflow-hidden">
-        {/* Left Side Image */}
-        <div className="w-1/2 flex justify-center items-center">
-          <img src="/forgot_password.svg" alt="Forgot Password Illustration" className="w-full h-auto object-cover" />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-indigo-50">
+      <div className="w-full max-w-4xl mx-4 flex bg-white rounded-3xl shadow-2xl overflow-hidden">
+        {/* Left Side Illustration */}
+        <div className="hidden md:flex w-1/2 bg-gradient-to-br from-purple-600 to-indigo-600 items-center justify-center p-10 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+          <div className="relative z-10 text-center">
+            <img src="/forgot_password.svg" alt="Forgot Password Illustration" className="w-full max-w-xs mx-auto drop-shadow-2xl" />
+            <h2 className="text-white text-2xl font-bold mt-6">Forgot your password?</h2>
+            <p className="text-purple-200 text-sm mt-2">Don't worry! Enter your email and we'll send you a link to reset it.</p>
+          </div>
         </div>
 
         {/* Right Side Form */}
-        <div className="w-1/2 p-10">
-          <h2 className="text-2xl font-bold mb-6 text-gray-900 text-center">Forgot Password</h2>
+        <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+          {/* Logo */}
+          <div className="mb-10 text-center md:text-left">
+            <h1 className="text-2xl font-bold">
+              <span className="text-gray-900">E</span>
+              <span className="text-purple-600">duverse</span>
+            </h1>
+            <h2 className="text-xl font-bold text-gray-900 mt-2">Recover Password</h2>
+            <p className="text-gray-500 text-sm mt-1">We'll send you instructions to reset your password</p>
+          </div>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Input */}
-            <div className="mb-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5 text-left">Email Address</label>
               <div className="relative">
                 <input
                   type="email"
-                  placeholder="Enter your email"
-                  className="w-full border border-gray-300 p-3 rounded"
+                  placeholder="Enter your registered email"
+                  className="w-full border border-gray-200 bg-gray-50 rounded-xl px-4 py-3 pr-11 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  disabled={isSubmitting} // Disable while submitting
+                  disabled={isSubmitting}
                 />
-                <FaEnvelope className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+                <FaEnvelope className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" />
               </div>
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
-              className={`w-full p-3 rounded font-semibold ${
-                isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-purple-600 text-white"
-              }`}
               disabled={isSubmitting}
+              className={`w-full py-3 rounded-xl font-bold transition-all duration-200 flex items-center justify-center gap-2 shadow-lg active:scale-95 ${
+                isSubmitting 
+                  ? "bg-gray-400 cursor-not-allowed text-white shadow-none" 
+                  : "bg-purple-600 hover:bg-purple-700 text-white shadow-purple-600/20"
+              }`}
             >
-              {isSubmitting ? "Sending..." : "Send Password Reset Link"}
+              {isSubmitting ? (
+                <>
+                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Sending...
+                </>
+              ) : (
+                "Send Reset Link"
+              )}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-gray-600">
+          {/* Footer Navigation */}
+          <div className="mt-10 text-center border-t border-gray-50 pt-8">
+            <p className="text-gray-500 text-sm">
               Remembered your password?{" "}
-              <a href="/user-login" className="text-purple-600 font-semibold">Login</a>
+              <a href="/user-login" className="text-purple-600 font-bold hover:underline">
+                Sign in here
+              </a>
             </p>
           </div>
         </div>
       </div>
 
-      {/* ✅ Toast Notification Container */}
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
