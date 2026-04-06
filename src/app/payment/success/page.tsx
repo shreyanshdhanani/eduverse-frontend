@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import { CheckCircle, ArrowRight, Download, Home, BookOpen, Loader2, AlertCircle } from 'lucide-react';
 
-export default function PaymentSuccess() {
+function PaymentSuccessContent() {
     const searchParams = useSearchParams();
     const sessionId = searchParams.get('session_id');
     const [isVerifying, setIsVerifying] = useState(true);
@@ -145,4 +145,15 @@ export default function PaymentSuccess() {
         </div>
     );
 }
-  
+
+export default function PaymentSuccess() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-[90vh] flex items-center justify-center bg-gray-50/50 p-6">
+                <Loader2 size={48} className="text-purple-600 animate-spin" />
+            </div>
+        }>
+            <PaymentSuccessContent />
+        </Suspense>
+    );
+}
