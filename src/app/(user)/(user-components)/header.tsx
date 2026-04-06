@@ -9,6 +9,7 @@ import Link from "next/link";
 
 const navLinks = [
   { label: "Courses", href: "/course" },
+  { label: "AI Exam", href: "/ai-exam" },
   { label: "About Us", href: "/about-us" },
   { label: "Why Choose Us", href: "/why-choose-us" },
   { label: "Our Partners", href: "/our-partners" },
