@@ -8,6 +8,7 @@ import { FaBookOpen } from "react-icons/fa";
 import Link from "next/link";
 
 const navLinks = [
+  { label: "Courses", href: "/course" },
   { label: "About Us", href: "/about-us" },
   { label: "Why Choose Us", href: "/why-choose-us" },
   { label: "Our Partners", href: "/our-partners" },

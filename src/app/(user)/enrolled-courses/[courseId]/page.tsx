@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { GetCourseDetailsService } from "@/app/service/course-service";
 import { GenerateQuestionService } from "@/app/service/quiz.service";
+import { getAssetUrl } from "@/app/utils/asset-url";
 
 // Types
 interface Course {
@@ -87,7 +88,7 @@ export default function LearnCourse() {
       <video
         controls
         className="w-full h-[400px] rounded-lg shadow-md bg-black"
-        src={`http://localhost:3020/api${activeVideo}`}
+        src={getAssetUrl(activeVideo)}
       />
     ) : (
       <p className="text-gray-500">Select a video to start learning.</p>
@@ -109,7 +110,7 @@ export default function LearnCourse() {
           {course.thumbnail && (
             <div className="mt-6 flex justify-center">
               <img
-                src={`http://localhost:3020/api/upload/courses/${course.thumbnail}`}
+                src={getAssetUrl(course.thumbnail)}
                 alt="Course Thumbnail"
                 className="rounded-xl shadow-lg max-w-full h-auto md:max-w-md object-cover"
               />

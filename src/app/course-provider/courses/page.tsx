@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Eye, Plus, PlusCircle, PlusCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { GetCoursesListByCourseProviderService } from "@/app/service/course-provider-service";
+import { getAssetUrl } from "@/app/utils/asset-url";
 
 interface Course {
   _id: string;
@@ -59,7 +60,7 @@ export default function CourseList() {
                   <td className="p-3">
                     {course.thumbnail && (
                       <img
-                        src={`http://localhost:3020/api/upload/courses/${course.thumbnail}`}
+                        src={getAssetUrl(course.thumbnail)}
                         alt={course.title}
                         className="w-20 h-20 rounded-md shadow"
                       />

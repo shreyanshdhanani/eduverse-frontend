@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { GetUniversityEnrolledStudents } from "@/app/service/university-service";
 import { Search, User, Book, Calendar, CheckCircle, Clock } from "lucide-react";
 import Image from "next/image";
+import { getAssetUrl } from "@/app/utils/asset-url";
 
 interface Enrollment {
     _id: string;
@@ -79,7 +80,7 @@ export default function UniversityEnrolledStudents() {
                     <div key={enrollment._id} className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex flex-col md:flex-row items-center gap-6">
                         <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
                              <Image
-                                src={enrollment.courseId.thumbnailImage ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3020/api'}/upload/courses/${enrollment.courseId.thumbnailImage}` : "/hero.jpg"}
+                                src={getAssetUrl(enrollment.courseId.thumbnailImage || "/hero.jpg")}
                                 alt={enrollment.courseId.title}
                                 fill
                                 className="object-cover"

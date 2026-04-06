@@ -5,6 +5,7 @@ import { FaCheckCircle, FaTimesCircle, FaClock, FaFilePdf } from "react-icons/fa
 import axios from "axios";
 import { GetAllUniversitiesService, UpdateUniversityStatusService, GeneratePdfService } from "@/app/service/university-service";
 import { Mail, Phone, Globe, ChevronDown, Building2 } from "lucide-react";
+import { getAssetUrl } from "@/app/utils/asset-url";
 
 const statusStyles: Record<string, { bg: string; text: string; dot: string }> = {
   Approved: { bg: "bg-green-100", text: "text-green-700", dot: "bg-green-500" },
@@ -135,7 +136,7 @@ const UniversityManagement = () => {
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
                             <img
-                              src={university.logo ? `http://localhost:3020/api/upload/${university.logo}` : "/default_user.png"}
+                              src={getAssetUrl(university.logo)}
                               className="w-10 h-10 rounded-lg object-contain border border-gray-100 bg-gray-50 flex-shrink-0"
                               alt={university.universityName}
                             />
@@ -201,7 +202,7 @@ const UniversityManagement = () => {
                   {/* Header */}
                   <div className="flex items-start gap-3 mb-3">
                     <img
-                      src={university.logo ? `http://localhost:3020/api/upload/${university.logo}` : "/default_user.png"}
+                      src={getAssetUrl(university.logo)}
                       className="w-12 h-12 rounded-xl object-contain border border-gray-100 bg-gray-50 flex-shrink-0"
                       alt={university.universityName}
                     />
