@@ -10,7 +10,7 @@ import {
   GetAllSubscriptionPlansService, 
   AssignSubscriptionPlanService 
 } from "@/app/service/university-service";
-import { Mail, Phone, Globe, ChevronDown, Building2, CreditCard, Calendar, X } from "lucide-react";
+import { Mail, Phone, Globe, ChevronDown, Building2, CreditCard, Calendar, X, CheckCircle2, AlertCircle } from "lucide-react";
 import { getAssetUrl } from "@/app/utils/asset-url";
 
 const statusStyles: Record<string, { bg: string; text: string; dot: string }> = {
@@ -205,15 +205,29 @@ const UniversityManagement = () => {
                             {university.approvalStatus}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-center">
+                        <td className="px-6 py-4">
+                          {university.activeSubscription ? (
+                            <div className="flex flex-col gap-1 items-start">
+                              <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-green-50 text-green-700 text-[10px] font-bold rounded-md uppercase tracking-wider">
+                                <CheckCircle2 size={10} /> {university.activeSubscription.planName}
+                              </span>
+                              <div className="text-[10px] text-gray-500 font-medium whitespace-nowrap">
+                                Seats: <span className="font-bold text-gray-700">{university.activeSubscription.maxStudents}</span> | Crs/Std: <span className="font-bold text-gray-700">{university.activeSubscription.maxCoursesPerStudent}</span>
+                              </div>
+                            </div>
+                          ) : (
+                            <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-red-50 text-red-700 text-[10px] font-bold rounded-md uppercase tracking-wider w-fit">
+                              <AlertCircle size={10} /> No Active Plan
+                            </span>
+                          )}
                           <button
                             onClick={() => {
                               setSelectedUniversity(university);
                               setIsAssignModalOpen(true);
                             }}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 text-purple-600 hover:bg-purple-600 hover:text-white rounded-lg text-xs font-bold transition-all border border-purple-100"
+                            className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 bg-purple-50 text-purple-600 hover:bg-purple-600 hover:text-white rounded-lg text-[10px] font-bold transition-all border border-purple-100 w-max"
                           >
-                            <CreditCard size={12} />
+                            <CreditCard size={10} />
                             Assign Plan
                           </button>
                         </td>
@@ -281,12 +295,32 @@ const UniversityManagement = () => {
                   )}
 
                   <div className="flex flex-col gap-2 pt-3 border-t border-gray-50">
+                    <div className="flex items-start justify-between bg-gray-50 p-3 rounded-xl mb-1">
+                      <div>
+                        {university.activeSubscription ? (
+                          <>
+                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-green-50 text-green-700 text-[10px] font-bold rounded-md uppercase tracking-wider mb-1">
+                              <CheckCircle2 size={10} /> Active: {university.activeSubscription.planName}
+                            </span>
+                            <div className="text-[10px] text-gray-500 font-medium">
+                              Seats: <span className="font-bold text-gray-700">{university.activeSubscription.maxStudents}</span><br/>
+                              Courses/Student: <span className="font-bold text-gray-700">{university.activeSubscription.maxCoursesPerStudent}</span>
+                            </div>
+                          </>
+                        ) : (
+                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-red-50 text-red-700 text-[10px] font-bold rounded-md uppercase tracking-wider">
+                            <AlertCircle size={10} /> No Active Plan
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    
                     <button
                       onClick={() => {
                         setSelectedUniversity(university);
                         setIsAssignModalOpen(true);
                       }}
-                      className="w-full flex items-center justify-center gap-2 py-2.5 bg-purple-600 text-white rounded-xl text-xs font-bold shadow-sm shadow-purple-100 active:scale-[0.98] transition-transform"
+                      className="w-full flex items-center justify-center gap-2 py-2 bg-purple-50 text-purple-600 hover:bg-purple-600 hover:text-white rounded-xl text-xs font-bold shadow-sm transition-all"
                     >
                       <CreditCard size={14} />
                       Assign Subscription Plan

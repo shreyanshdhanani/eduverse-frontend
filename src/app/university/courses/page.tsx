@@ -11,7 +11,7 @@ interface Course {
     _id: string;
     title: string;
     description: string;
-    thumbnailImage: string;
+    thumbnail: string;
     price: number;
     duration: string;
     instructor?: string;
@@ -84,7 +84,7 @@ export default function UniversityCourses() {
 }
 
 function CourseCard({ course }: { course: Course }) {
-    const imageUrl = getAssetUrl(course.thumbnailImage);
+    const imageUrl = getAssetUrl(course.thumbnail);
 
     return (
         <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col group">

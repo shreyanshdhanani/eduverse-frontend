@@ -16,7 +16,7 @@ interface Enrollment {
     courseId: {
         _id: string;
         title: string;
-        thumbnailImage: string;
+        thumbnail: string;
     };
     status: string;
     progress: number;
@@ -80,7 +80,7 @@ export default function UniversityEnrolledStudents() {
                     <div key={enrollment._id} className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex flex-col md:flex-row items-center gap-6">
                         <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
                              <Image
-                                src={getAssetUrl(enrollment.courseId.thumbnailImage || "/hero.jpg")}
+                                src={getAssetUrl(enrollment.courseId.thumbnail || "/hero.jpg")}
                                 alt={enrollment.courseId.title}
                                 fill
                                 className="object-cover"

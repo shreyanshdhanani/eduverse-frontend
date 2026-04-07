@@ -11,6 +11,10 @@ interface DashboardData {
     subscriptionPlan: string;
     universityName: string;
     approvalStatus: string;
+    subscriptionDetails?: {
+        maxStudents: number;
+        maxCoursesPerStudent: number;
+    } | null;
 }
 
 export default function UniversityDashboard() {
@@ -73,6 +77,8 @@ export default function UniversityDashboard() {
                     value={stats?.subscriptionPlan || 'N/A'} 
                     icon={<PiShieldCheck size={24} />} 
                     color="pink"
+                    trend={stats?.subscriptionDetails ? `Seats: ${stats.subscriptionDetails.maxStudents} • Crs/Std: ${stats.subscriptionDetails.maxCoursesPerStudent}` : null}
+                    trendIcon={false}
                 />
             </div>
 
@@ -114,7 +120,7 @@ export default function UniversityDashboard() {
     );
 }
 
-function StatCard({ title, value, icon, color, trend }: any) {
+function StatCard({ title, value, icon, color, trend, trendIcon = true }: any) {
     const colorMap: any = {
         purple: "bg-purple-600",
         blue: "bg-blue-600",
@@ -128,8 +134,8 @@ function StatCard({ title, value, icon, color, trend }: any) {
                     <p className="text-gray-500 text-sm font-medium">{title}</p>
                     <h2 className="text-3xl font-bold mt-2 text-gray-900">{value}</h2>
                     {trend && (
-                        <p className="text-green-600 text-xs font-medium flex items-center mt-2">
-                            <LuTrendingUp className="mr-1" /> {trend}
+                        <p className={`mt-2 text-xs font-medium flex items-center ${trendIcon ? 'text-green-600' : 'text-purple-600'}`}>
+                            {trendIcon && <LuTrendingUp className="mr-1" />} {trend}
                         </p>
                     )}
                 </div>
