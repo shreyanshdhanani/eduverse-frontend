@@ -72,14 +72,16 @@ export default function UniversityDashboard() {
                     color="blue"
                     trend="In courses"
                 />
-                <StatCard 
-                    title="Active Plan" 
-                    value={stats?.subscriptionPlan || 'N/A'} 
-                    icon={<PiShieldCheck size={24} />} 
-                    color="pink"
-                    trend={stats?.subscriptionDetails ? `Seats: ${stats.subscriptionDetails.maxStudents} • Crs/Std: ${stats.subscriptionDetails.maxCoursesPerStudent}` : null}
-                    trendIcon={false}
-                />
+                {stats?.subscriptionPlan && stats.subscriptionPlan !== 'No Active Plan' && (
+                    <StatCard 
+                        title="Active Plan" 
+                        value={stats.subscriptionPlan} 
+                        icon={<PiShieldCheck size={24} />} 
+                        color="pink"
+                        trend={stats?.subscriptionDetails ? `Seats: ${stats.subscriptionDetails.maxStudents} • Crs/Std: ${stats.subscriptionDetails.maxCoursesPerStudent}` : null}
+                        trendIcon={false}
+                    />
+                )}
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

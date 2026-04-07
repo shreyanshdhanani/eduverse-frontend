@@ -134,13 +134,9 @@ const SubscriptionContent = () => {
             <div>
               <h1 className="text-3xl font-black text-gray-900 tracking-tight">University Subscription</h1>
               <div className="flex items-center gap-2 mt-1.5">
-                {hasSubscription ? (
+                {hasSubscription && (
                   <span className="flex items-center gap-1.5 px-4 py-1.5 bg-green-50 text-green-700 text-xs font-black rounded-full border border-green-100 uppercase tracking-wider">
                     <CheckCircle2 size={12} /> Active: {subscription.planName}
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1.5 px-4 py-1.5 bg-red-50 text-red-700 text-xs font-black rounded-full border border-red-100 uppercase tracking-wider">
-                    <AlertCircle size={12} /> No Active Plan
                   </span>
                 )}
               </div>
@@ -165,7 +161,24 @@ const SubscriptionContent = () => {
         <div className="absolute bottom-0 left-0 w-40 h-40 bg-violet-50 rounded-full blur-[60px] opacity-30 -ml-16 -mb-16 pointer-events-none" />
       </div>
 
-      {!hasSubscription && (
+      {hasSubscription ? (
+        <div className="bg-indigo-50 rounded-[2rem] p-10 border border-indigo-100 flex flex-col md:flex-row items-center gap-8 shadow-sm shadow-indigo-50">
+          <div className="w-20 h-20 bg-white rounded-[2rem] flex items-center justify-center shadow-md shrink-0">
+            <ShieldCheck className="text-indigo-500" size={40} />
+          </div>
+          <div className="flex-1 text-center md:text-left">
+            <h2 className="text-xl font-black text-indigo-900 mb-2">Active Plan: {subscription.planName}</h2>
+            <p className="text-indigo-700/80 text-sm leading-relaxed max-w-2xl font-medium">
+              Your institution is currently on the <strong>{subscription.planName}</strong> plan. You have full access to student enrollments and premium course features until {new Date(subscription.endDate).toLocaleDateString()}.
+            </p>
+          </div>
+          <div className="shrink-0">
+             <div className="px-6 py-4 bg-indigo-100/50 border border-indigo-200 rounded-2xl text-indigo-900 text-sm font-black flex items-center gap-3">
+                <CheckCircle2 size={18} /> Subscribed
+             </div>
+          </div>
+        </div>
+      ) : (
         <div className="bg-amber-50 rounded-[2rem] p-10 border border-amber-100 flex flex-col md:flex-row items-center gap-8 shadow-sm shadow-amber-50">
           <div className="w-20 h-20 bg-white rounded-[2rem] flex items-center justify-center shadow-md shrink-0">
             <ShieldAlert className="text-amber-500" size={40} />
