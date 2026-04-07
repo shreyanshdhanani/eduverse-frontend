@@ -158,7 +158,7 @@ export default function CourseDetails() {
       <div className="bg-gradient-to-r from-purple-100 to-indigo-100 py-10">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 px-6">
           <div className="text-xl font-semibold text-gray-800">
-            Price: <span className="text-green-600">₹{course.price || 'Free'}</span>
+            Price: <span className="text-green-600">${course.price || 'Free'}</span>
           </div>
         </div>
       </div>

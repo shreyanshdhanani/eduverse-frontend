@@ -287,7 +287,7 @@ const SubscriptionContent = () => {
               <div className="flex-1">
                 <h3 className="text-xl font-black text-gray-900 mb-2">{plan.planName}</h3>
                 <div className="flex items-baseline gap-1 mb-6">
-                  <span className="text-4xl font-black text-gray-900">₹{plan.price}</span>
+                  <span className="text-4xl font-black text-gray-900">${plan.price}</span>
                   <span className="text-sm text-gray-400 font-bold">/ Year</span>
                 </div>
 

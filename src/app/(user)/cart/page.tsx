@@ -196,7 +196,7 @@ const ShoppingCart = () => {
                         {course.price === 0 ? (
                           <span className="text-green-600">Free</span>
                         ) : (
-                          `₹${course.price.toLocaleString()}`
+                          `$${course.price.toLocaleString()}`
                         )}
                       </p>
                     </div>
@@ -255,7 +255,7 @@ const ShoppingCart = () => {
                   <div key={course._id} className="flex justify-between text-sm text-gray-600">
                     <span className="line-clamp-1 flex-1 mr-2">{course.title}</span>
                     <span className="font-semibold flex-shrink-0 text-gray-800">
-                      {course.price === 0 ? "Free" : `₹${course.price.toLocaleString()}`}
+                      {course.price === 0 ? "Free" : `$${course.price.toLocaleString()}`}
                     </span>
                   </div>
                 ))}
@@ -264,7 +264,7 @@ const ShoppingCart = () => {
               <div className="border-t border-dashed border-gray-200 pt-4 space-y-3 mb-6">
                 <div className="flex justify-between text-sm text-gray-500 font-medium">
                   <span>Subtotal ({cartCourses.length} courses)</span>
-                  <span>₹{totalPrice.toLocaleString()}</span>
+                  <span>${totalPrice.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-500 font-medium">
                   <span>Discount</span>
@@ -272,7 +272,7 @@ const ShoppingCart = () => {
                 </div>
                 <div className="flex justify-between items-baseline font-bold text-gray-900">
                   <span className="text-base">Total</span>
-                  <span className="text-2xl text-purple-700">₹{totalPrice.toLocaleString()}</span>
+                  <span className="text-2xl text-purple-700">${totalPrice.toLocaleString()}</span>
                 </div>
               </div>
 

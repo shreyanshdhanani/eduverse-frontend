@@ -61,9 +61,8 @@ export default function EarningsAndOrdersPage() {
         <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-green-500">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-gray-500 text-sm font-medium">Total Earnings</p>
               <h3 className="text-3xl font-bold text-gray-900 mt-1">
-                ₹{analytics?.totalEarnings?.toLocaleString() || 0}
+                ${analytics?.totalEarnings?.toLocaleString() || 0}
               </h3>
             </div>
             <div className="p-3 bg-green-100 rounded-full">
@@ -117,7 +116,7 @@ export default function EarningsAndOrdersPage() {
                     </p>
                     <p className="text-xs text-gray-500">{course.count} enrollments</p>
                   </div>
-                  <p className="font-bold text-green-600">₹{course.total.toLocaleString()}</p>
+                  <p className="font-bold text-green-600">${course.total.toLocaleString()}</p>
                 </div>
               ))}
             </div>
@@ -162,7 +161,7 @@ export default function EarningsAndOrdersPage() {
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
                         <div className="text-sm font-semibold text-green-600">
-                          ₹{order.amount?.toLocaleString() || 0}
+                          ${order.amount?.toLocaleString() || 0}
                         </div>
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
