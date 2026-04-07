@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { GetCourseDetailsService } from "@/app/service/course-service";
 import { GenerateQuestionService } from "@/app/service/quiz.service";
+import { UpdateProgressService, IssueCertificateService, GetCertificateService } from "@/app/service/enrolled-service";
+import { GetEnrolledCoursesService } from "@/app/service/enrolled-service";
 import { getAssetUrl } from "@/app/utils/asset-url";
 import { useModal } from "@/components/ModalProvider";
 import { 
@@ -18,11 +20,14 @@ import {
   FileText,
   MessageSquare,
   ArrowLeft,
-  ChevronRight
+  ChevronRight,
+  Download,
+  Star,
+  Printer,
+  X
 } from "lucide-react";
 import Link from "next/link";
 
-// Types
 interface Course {
   title: string;
   description: string;
@@ -45,10 +50,133 @@ interface Question {
   answer: string;
 }
 
+interface Certificate {
+  _id: string;
+  courseTitle: string;
+  studentName: string;
+  providerName: string;
+  issuedAt: string;
+}
+
+// ─── Certificate Modal Component ─────────────────────────────────────────────
+
+function CertificateModal({ certificate, onClose }: { certificate: Certificate; onClose: () => void }) {
+  const handlePrint = () => {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+    const date = new Date(certificate.issuedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Certificate of Completion</title>
+          <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font-family: 'Georgia', serif; background: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+            .certificate { width: 800px; padding: 60px; border: 8px solid #4f46e5; border-radius: 8px; text-align: center; position: relative; background: linear-gradient(135deg, #fafafa 0%, #f0f0ff 100%); }
+            .certificate::before { content: ''; position: absolute; inset: 12px; border: 2px solid #4f46e5; border-radius: 4px; opacity: 0.3; }
+            .badge { width: 80px; height: 80px; background: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
+            .badge svg { width: 40px; height: 40px; fill: white; }
+            .subtitle { font-size: 12px; letter-spacing: 4px; text-transform: uppercase; color: #6b7280; margin-bottom: 16px; }
+            .main-title { font-size: 42px; color: #1f1f1f; margin-bottom: 4px; }
+            .divider { width: 120px; height: 3px; background: #4f46e5; margin: 20px auto; border-radius: 2px; }
+            .presented { font-size: 14px; color: #6b7280; margin-bottom: 12px; }
+            .student-name { font-size: 36px; color: #4f46e5; font-style: italic; margin-bottom: 24px; }
+            .completion-text { font-size: 16px; color: #374151; margin-bottom: 12px; }
+            .course-title { font-size: 22px; color: #1f1f1f; font-weight: bold; margin-bottom: 32px; }
+            .footer { display: flex; justify-content: space-between; margin-top: 48px; padding-top: 24px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #9ca3af; }
+            .provider { font-size: 16px; font-weight: bold; color: #374151; }
+          </style>
+        </head>
+        <body>
+          <div class="certificate">
+            <div class="badge">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <p class="subtitle">Certificate of Completion</p>
+            <h1 class="main-title">This certifies that</h1>
+            <div class="divider"></div>
+            <p class="student-name">${certificate.studentName}</p>
+            <p class="completion-text">has successfully completed the course</p>
+            <p class="course-title">"${certificate.courseTitle}"</p>
+            <p class="presented">Issued on ${date} by <span class="provider">${certificate.providerName}</span></p>
+            <div class="footer">
+              <span>Certificate ID: ${certificate._id}</span>
+              <span>Issued: ${date}</span>
+            </div>
+          </div>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+  };
+
+  const date = new Date(certificate.issuedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-950/70 backdrop-blur-sm animate-in fade-in duration-300">
+      <div className="bg-white rounded-[3rem] shadow-2xl max-w-2xl w-full overflow-hidden animate-in zoom-in-95 duration-400">
+        {/* Header */}
+        <div className="bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 p-10 text-center relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 50%, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+          <button onClick={onClose} className="absolute top-5 right-5 text-white/50 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10">
+            <X size={20} />
+          </button>
+          <div className="w-20 h-20 bg-amber-400 rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl shadow-amber-400/30">
+            <Award size={40} className="text-amber-900" />
+          </div>
+          <p className="text-xs text-indigo-300 font-black uppercase tracking-[0.3em] mb-2">Certificate of Completion</p>
+          <h2 className="text-3xl font-black text-white tracking-tight">This Certifies That</h2>
+        </div>
+
+        {/* Certificate Body */}
+        <div className="p-10 text-center space-y-6 border-b border-gray-100">
+          <div>
+            <p className="text-xs text-gray-500 font-black uppercase tracking-widest mb-2">Awarded to</p>
+            <h3 className="text-4xl font-black text-indigo-700 italic tracking-tight">{certificate.studentName}</h3>
+          </div>
+          <div className="h-px bg-gradient-to-r from-transparent via-indigo-200 to-transparent" />
+          <div>
+            <p className="text-sm text-gray-600 font-bold mb-2">for successfully completing</p>
+            <p className="text-xl font-black text-gray-950 tracking-tight">&ldquo;{certificate.courseTitle}&rdquo;</p>
+          </div>
+          <div className="grid grid-cols-2 gap-4 mt-4">
+            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
+              <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Issued By</p>
+              <p className="font-black text-gray-950">{certificate.providerName}</p>
+            </div>
+            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
+              <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Date Issued</p>
+              <p className="font-black text-gray-950">{date}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Actions */}
+        <div className="p-6 bg-gray-50 flex items-center justify-between gap-4">
+          <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">ID: {certificate._id?.slice(-10)}</p>
+          <div className="flex gap-3">
+            <button onClick={onClose} className="px-6 py-3 bg-gray-200 text-gray-800 rounded-2xl font-black text-sm hover:bg-gray-300 transition-all">
+              Close
+            </button>
+            <button onClick={handlePrint} className="flex items-center gap-2 px-6 py-3 bg-indigo-700 text-white rounded-2xl font-black text-sm hover:bg-indigo-800 transition-all shadow-lg shadow-indigo-700/20 active:scale-95">
+              <Printer size={16} /> Download / Print
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Component ───────────────────────────────────────────────────────────
+
 export default function LearnCourse() {
   const { showAlert } = useModal();
   const params = useParams();
   const courseId = params?.courseId as string;
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
@@ -61,18 +189,45 @@ export default function LearnCourse() {
   const [score, setScore] = useState(0);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
 
-  // Fetch course details
+  // ─── Progress State ─────────────────────────────────────────────────────────
+  const [progress, setProgress] = useState(0);
+  const [completedVideos, setCompletedVideos] = useState<Set<string>>(new Set());
+  const [totalVideos, setTotalVideos] = useState(0);
+
+  // ─── Certificate State ──────────────────────────────────────────────────────
+  const [certificate, setCertificate] = useState<Certificate | null>(null);
+  const [showCertModal, setShowCertModal] = useState(false);
+  const [issuingCert, setIssuingCert] = useState(false);
+
+  // Fetch course details + initial progress
   useEffect(() => {
-    const fetchCourseDetails = async () => {
+    const fetchAll = async () => {
       try {
         setLoading(true);
         const data: any = await GetCourseDetailsService(courseId);
         setCourse(data);
-        // Set first video of first section as default
+
+        // Count total videos
+        const total = data?.sections?.reduce((sum: number, sec: any) => sum + (sec.videos?.length || 0), 0) || 0;
+        setTotalVideos(total);
+
+        // Set first video as active
         if (data?.sections?.length > 0 && data.sections[0].videos?.length > 0) {
           setActiveVideo(data.sections[0].videos[0]);
           setActiveSectionId(data.sections[0]._id);
           setOpenSections({ [data.sections[0]._id]: true });
+        }
+
+        // Fetch real progress from enrolled courses
+        const enrolled: any[] = await GetEnrolledCoursesService();
+        const enrollment = enrolled.find((c: any) => c._id === courseId || c._id?.toString() === courseId);
+        if (enrollment) {
+          setProgress(enrollment.progress || 0);
+          // If certificate was already issued, fetch it
+          if (enrollment.certificateIssued) {
+            const cert: any = await GetCertificateService(courseId);
+            if (cert) setCertificate(cert);
+          }
         }
       } catch (err) {
         setError("Failed to load course content.");
@@ -80,53 +235,87 @@ export default function LearnCourse() {
         setLoading(false);
       }
     };
-
-    if (courseId) fetchCourseDetails();
+    if (courseId) fetchAll();
   }, [courseId]);
 
-  // Handle exam logic
-  const handleStartExam = async (selectedTopic: string) => {
+  // ─── Video completion handler ───────────────────────────────────────────────
+  const handleVideoEnded = useCallback(async (videoUrl: string) => {
+    if (completedVideos.has(videoUrl) || totalVideos === 0) return;
+
+    const newCompleted = new Set(completedVideos).add(videoUrl);
+    setCompletedVideos(newCompleted);
+
+    const newProgress = Math.round((newCompleted.size / totalVideos) * 100);
+    setProgress(newProgress);
+
     try {
-      const response = await GenerateQuestionService(String(selectedTopic));
-      if (response.data?.quiz) {
-        setQuestions(response.data.quiz);
+      await UpdateProgressService(courseId, newProgress);
+    } catch (e) {
+      console.error('Failed to save progress:', e);
+    }
+  }, [completedVideos, totalVideos, courseId]);
+
+  // ─── Exam handlers ──────────────────────────────────────────────────────────
+  const handleStartExam = async () => {
+    if (!course) return;
+    try {
+      const response = await GenerateQuestionService(
+        course.title,
+        course.description,
+        (course as any).level || "Beginner"
+      );
+      if (response?.quiz) {
+        setQuestions(response.quiz);
         setUserAnswers({});
         setScore(0);
         setShowResult(false);
       }
     } catch (err) {
       console.error("Failed to load quiz:", err);
+      showAlert({ message: "Failed to generate AI exam. Please try again.", type: "error" });
     }
   };
 
-  const toggleSection = (id: string) => {
-    setOpenSections(prev => ({ ...prev, [id]: !prev[id] }));
-  };
-
-  const handleSubmitExam = () => {
+  const handleSubmitExam = async () => {
     const correctAnswers = questions.reduce((count, q, index) => {
       return userAnswers[index] === q.answer ? count + 1 : count;
     }, 0);
 
     setScore(correctAnswers);
     setShowResult(true);
-    
-    // Smooth scroll to top of exam results
+
+    const passed = correctAnswers >= questions.length * 0.7;
+    if (passed) {
+      // Issue certificate
+      setIssuingCert(true);
+      try {
+        const cert: any = await IssueCertificateService(courseId);
+        if (cert) {
+          setCertificate(cert);
+          setProgress(100);
+          setShowCertModal(true);
+        }
+      } catch (e: any) {
+        // If certificate was already issued, just fetch it
+        try {
+          const existingCert: any = await GetCertificateService(courseId);
+          if (existingCert) {
+            setCertificate(existingCert);
+            setShowCertModal(true);
+          }
+        } catch { /* ignore */ }
+      } finally {
+        setIssuingCert(false);
+      }
+    }
+
     const examElement = document.getElementById('exam-results');
     if (examElement) examElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
-  const renderVideoPlayer = () => (
-    activeVideo ? (
-      <video
-        controls
-        className="w-full h-[400px] rounded-lg shadow-md bg-black"
-        src={getAssetUrl(activeVideo)}
-      />
-    ) : (
-      <p className="text-gray-500">Select a video to start learning.</p>
-    )
-  );
+  const toggleSection = (id: string) => {
+    setOpenSections(prev => ({ ...prev, [id]: !prev[id] }));
+  };
 
   if (loading) return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center gap-4">
@@ -154,8 +343,13 @@ export default function LearnCourse() {
 
   return (
     <div className="min-h-screen bg-[#F8F9FD]">
+      {/* Certificate Modal */}
+      {showCertModal && certificate && (
+        <CertificateModal certificate={certificate} onClose={() => setShowCertModal(false)} />
+      )}
+
       {/* Top Navbar */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4">
+      <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4">
         <div className="max-w-[1800px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="/enrolled-courses" className="p-2 hover:bg-gray-100 rounded-xl transition-colors text-gray-500 group">
@@ -167,13 +361,19 @@ export default function LearnCourse() {
             </div>
           </div>
           <div className="flex items-center gap-4">
-             <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-gray-100 rounded-xl border border-gray-200">
-                <Clock size={16} className="text-gray-600" />
-                <span className="text-sm font-black text-gray-800">{course.duration} Hours Total</span>
-             </div>
-             <button className="bg-purple-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-purple-600/20 hover:bg-purple-700 transition-all active:scale-95">
-                Leave Review
-             </button>
+            <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-gray-100 rounded-xl border border-gray-200">
+              <Clock size={16} className="text-gray-600" />
+              <span className="text-sm font-black text-gray-800">{course.duration} Hours Total</span>
+            </div>
+            {/* Show Certificate button if already earned */}
+            {certificate && (
+              <button
+                onClick={() => setShowCertModal(true)}
+                className="flex items-center gap-2 bg-amber-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-amber-500/20 hover:bg-amber-600 transition-all active:scale-95"
+              >
+                <Award size={16} /> My Certificate
+              </button>
+            )}
           </div>
         </div>
       </nav>
@@ -187,11 +387,13 @@ export default function LearnCourse() {
             <div className="relative aspect-video bg-black rounded-[2.5rem] overflow-hidden shadow-2xl shadow-purple-900/10 group">
               {activeVideo ? (
                 <video
+                  ref={videoRef}
                   key={activeVideo}
                   controls
                   className="w-full h-full"
                   src={getAssetUrl(activeVideo)}
                   autoPlay
+                  onEnded={() => handleVideoEnded(activeVideo)}
                 />
               ) : (
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
@@ -204,7 +406,7 @@ export default function LearnCourse() {
               )}
             </div>
 
-            {/* Assessment UI (if questions are loaded) */}
+            {/* Quiz Section */}
             {questions.length > 0 && (
               <div id="quiz-section" className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-sm border border-gray-100 space-y-12 animate-in fade-in slide-in-from-bottom-5 duration-700">
                 <div className="flex items-center justify-between gap-4 flex-wrap border-b border-gray-50 pb-8">
@@ -251,10 +453,10 @@ export default function LearnCourse() {
                 <div className="pt-10 border-t border-gray-50 flex flex-col items-center">
                    <button 
                     onClick={handleSubmitExam}
-                    disabled={Object.keys(userAnswers).length < questions.length}
+                    disabled={Object.keys(userAnswers).length < questions.length || issuingCert}
                     className="group bg-gray-900 hover:bg-purple-600 disabled:bg-gray-200 disabled:cursor-not-allowed text-white px-10 py-5 rounded-[2rem] font-black text-lg shadow-xl transition-all active:scale-95 flex items-center gap-4"
                    >
-                     Submit Assessment
+                     {issuingCert ? 'Generating Certificate...' : 'Submit Assessment'}
                      <ChevronRight size={24} className="group-hover:translate-x-1 transition-transform" />
                    </button>
                    {Object.keys(userAnswers).length < questions.length && (
@@ -281,11 +483,11 @@ export default function LearnCourse() {
                         </div>
                         <br />
                         <button
-                          className="bg-purple-600 text-white px-8 py-4 rounded-2xl font-black shadow-lg shadow-purple-600/20 hover:bg-purple-700 transition-all flex items-center gap-3 mx-auto active:scale-95"
-                          onClick={() => showAlert({ message: "🎉 Your Certificate has been generated! Check your profile.", type: "success" })}
+                          className="bg-indigo-700 text-white px-8 py-4 rounded-2xl font-black shadow-lg shadow-indigo-700/20 hover:bg-indigo-800 transition-all flex items-center gap-3 mx-auto active:scale-95"
+                          onClick={() => setShowCertModal(true)}
                         >
-                          < Award size={20} />
-                          Download Certificate
+                          <Award size={20} />
+                          View My Certificate
                         </button>
                       </div>
                     ) : (
@@ -298,7 +500,7 @@ export default function LearnCourse() {
               </div>
             )}
 
-            {/* Course Details (Bottom Area) */}
+            {/* Course Details */}
             <div className={`p-8 md:p-12 rounded-[2.5rem] bg-white border border-gray-100 shadow-sm ${questions.length > 0 ? 'opacity-50 grayscale scale-95 origin-top transition-all duration-500 pointer-events-none' : ''}`}>
                <div className="flex items-center gap-4 mb-8">
                   <div className="p-3 bg-purple-50 rounded-2xl text-purple-600">
@@ -319,7 +521,7 @@ export default function LearnCourse() {
                         <MessageSquare size={20} />
                      </div>
                      <div>
-                        <h4 className="font-black text-gray-950 tracking-tight underline transition-all decoration-purple-200">Native Language</h4>
+                        <h4 className="font-black text-gray-950 tracking-tight">Native Language</h4>
                         <p className="text-sm text-gray-800 font-bold capitalize">{course.language}</p>
                      </div>
                   </div>
@@ -328,7 +530,7 @@ export default function LearnCourse() {
                         <BookOpen size={20} />
                      </div>
                      <div>
-                        <h4 className="font-black text-gray-950 tracking-tight underline transition-all decoration-purple-200">Main Topic</h4>
+                        <h4 className="font-black text-gray-950 tracking-tight">Main Topic</h4>
                         <p className="text-sm text-gray-800 font-bold">{course.topic.name}</p>
                      </div>
                   </div>
@@ -343,7 +545,7 @@ export default function LearnCourse() {
                       <p className="text-gray-100 font-bold max-w-md">Once you've finished all lessons, attempt the final assessment to earn your official completion certificate.</p>
                    </div>
                    <button
-                    onClick={() => handleStartExam(course.topic.name)}
+                    onClick={() => handleStartExam()}
                     className="relative z-10 bg-white text-gray-900 px-10 py-5 rounded-[2rem] font-black text-lg hover:bg-purple-400 hover:text-white transition-all active:scale-95 shadow-xl shadow-white/5"
                    >
                      Attempt Exam
@@ -361,12 +563,18 @@ export default function LearnCourse() {
                Course Content
                <span className="text-xs px-2 py-0.5 bg-gray-950 text-white rounded-md font-black uppercase">{course.sections.length} Modules</span>
             </h3>
+            {/* Dynamic real progress bar */}
             <div className="mt-6 w-full h-2.5 bg-gray-200 rounded-full overflow-hidden flex shadow-inner">
-               <div className="h-full bg-gradient-to-r from-purple-700 to-indigo-700 transition-all duration-1000 w-[15%]" />
+               <div 
+                 className="h-full bg-gradient-to-r from-purple-700 to-indigo-700 transition-all duration-1000 rounded-full" 
+                 style={{ width: `${progress}%` }} 
+               />
             </div>
             <div className="flex items-center justify-between mt-3">
                <span className="text-[10px] font-black text-gray-800 uppercase tracking-widest leading-none">Your Progress</span>
-               <span className="text-xs font-black text-purple-700 leading-none">15% COMPLETE</span>
+               <span className={`text-xs font-black leading-none ${progress >= 100 ? 'text-green-600' : 'text-purple-700'}`}>
+                 {progress}% {progress >= 100 ? '✓ COMPLETE' : 'COMPLETE'}
+               </span>
             </div>
           </div>
 
@@ -395,35 +603,39 @@ export default function LearnCourse() {
 
                 {openSections[section._id] && (
                   <div className="mt-2 space-y-1 pl-4 pr-2">
-                    {section.videos.map((video, vidIndex) => (
-                      <button
-                        key={vidIndex}
-                        onClick={() => {
-                          setActiveVideo(video);
-                          setActiveSectionId(section._id);
-                        }}
-                        className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all group ${
-                          activeVideo === video 
-                            ? "bg-purple-50 text-purple-600" 
-                            : "hover:bg-gray-50 text-gray-500"
-                        }`}
-                      >
-                        <div className={`transition-colors ${activeVideo === video ? "text-purple-700" : "text-gray-700 group-hover:text-purple-600"}`}>
-                           {activeVideo === video ? <PlayCircle size={20} fill="currentColor" fillOpacity={0.1} /> : <PlayCircle size={18} />}
-                        </div>
-                        <div className="flex-1 text-left">
-                          <p className={`text-xs font-black leading-tight ${activeVideo === video ? "text-purple-800" : "text-gray-900 group-hover:text-black"}`}>
-                             Lesson {vidIndex + 1}
-                          </p>
-                          <p className={`text-[10px] font-black mt-1 flex items-center gap-1.5 uppercase ${activeVideo === video ? 'text-purple-600' : 'text-gray-700'}`}>
-                             <Clock size={10} /> 12:45 MIN
-                          </p>
-                        </div>
-                        <div className="flex-shrink-0">
-                           <CheckCircle2 size={16} className={`transition-opacity ${activeVideo === video ? "opacity-100" : "opacity-20"}`} />
-                        </div>
-                      </button>
-                    ))}
+                    {section.videos.map((video, vidIndex) => {
+                      const isCompleted = completedVideos.has(video);
+                      return (
+                        <button
+                          key={vidIndex}
+                          onClick={() => {
+                            setActiveVideo(video);
+                            setActiveSectionId(section._id);
+                          }}
+                          className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all group ${
+                            activeVideo === video 
+                              ? "bg-purple-50 text-purple-600" 
+                              : "hover:bg-gray-50 text-gray-500"
+                          }`}
+                        >
+                          <div className={`transition-colors ${activeVideo === video ? "text-purple-700" : "text-gray-700 group-hover:text-purple-600"}`}>
+                             {activeVideo === video ? <PlayCircle size={20} fill="currentColor" fillOpacity={0.1} /> : <PlayCircle size={18} />}
+                          </div>
+                          <div className="flex-1 text-left">
+                            <p className={`text-xs font-black leading-tight ${activeVideo === video ? "text-purple-800" : "text-gray-900 group-hover:text-black"}`}>
+                               Lesson {vidIndex + 1}
+                            </p>
+                            <p className={`text-[10px] font-black mt-1 flex items-center gap-1.5 uppercase ${activeVideo === video ? 'text-purple-600' : 'text-gray-700'}`}>
+                               <Clock size={10} /> Watch to Complete
+                            </p>
+                          </div>
+                          {/* Completed checkmark */}
+                          <div className="flex-shrink-0">
+                             <CheckCircle2 size={16} className={`transition-all ${isCompleted ? 'text-green-500 opacity-100' : 'text-gray-300 opacity-40'}`} fill={isCompleted ? 'currentColor' : 'none'} fillOpacity={isCompleted ? 0.15 : 0} />
+                          </div>
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -447,19 +659,10 @@ export default function LearnCourse() {
       </div>
 
       <style jsx global>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 5px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #E5E7EB;
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #D1D5DB;
-        }
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #D1D5DB; }
       `}</style>
     </div>
   );

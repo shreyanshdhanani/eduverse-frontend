@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Home, List, FilePlus, Settings, LogOut, ArrowLeftFromLine,
-  ListCheck, CreditCard, BookOpen, Menu,
+  ListCheck, CreditCard, BookOpen, Menu, Award,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -14,6 +14,7 @@ const menuItems = [
   { id: "courses", title: "My Courses", icon: <List size={20} />, href: "/course-provider/courses" },
   { id: "upload", title: "Upload Course", icon: <FilePlus size={20} />, href: "/course-provider/upload-course" },
   { id: "orders", title: "Orders & Earnings", icon: <CreditCard size={20} />, href: "/course-provider/orders" },
+  { id: "certificates", title: "Certificates", icon: <Award size={20} />, href: "/course-provider/certificates" },
   { id: "settings", title: "Settings", icon: <Settings size={20} />, href: "/course-provider/settings" },
 ];
 
