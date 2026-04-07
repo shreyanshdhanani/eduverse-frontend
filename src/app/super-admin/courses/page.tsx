@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { GetAllCourse, CourseStatusService } from "@/app/service/super-admin.service";
 import { FaCheckCircle, FaTimesCircle, FaClock } from "react-icons/fa";
 import { getAssetUrl } from "@/app/utils/asset-url";
+import { useModal } from "@/components/ModalProvider";
 
 interface Course {
   _id: string;
@@ -22,6 +23,7 @@ const statusStyles: Record<string, { bg: string; text: string; dot: string }> = 
 };
 
 export default function CourseList() {
+  const { showAlert } = useModal();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,8 +50,9 @@ export default function CourseList() {
       setUpdating(courseId);
       await CourseStatusService(courseId, newStatus);
       setCourses((prev) => prev.map((c) => c._id === courseId ? { ...c, approvalStatus: newStatus } : c));
+      showAlert({ message: `Course status updated to ${newStatus} successfully!`, type: "success" });
     } catch {
-      alert("Failed to update status. Please try again.");
+      showAlert({ message: "Failed to update status. Please try again.", type: "error" });
     } finally {
       setUpdating(null);
     }

@@ -3,15 +3,23 @@ import { useState, useEffect, Suspense } from "react";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { GenerateQuestionService } from "@/app/service/quiz.service";
+import { useModal } from "@/components/ModalProvider";
+
+interface Question {
+  question: string;
+  options: string[];
+  answer: string;
+}
 
 const QuizContent = () => {
+  const { showAlert } = useModal();
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedTopic = searchParams.get("topic");
 
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState({});
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({});
   const [score, setScore] = useState(0);
 
   useEffect(() => {
@@ -44,7 +52,7 @@ const QuizContent = () => {
     fetchQuestions();
   }, [selectedTopic, router]);
 
-  const handleAnswerSelect = (option) => {
+  const handleAnswerSelect = (option: string) => {
     setSelectedAnswers({
       ...selectedAnswers,
       [currentQuestionIndex]: option,
@@ -71,7 +79,7 @@ const QuizContent = () => {
       }
     });
     setScore(calculatedScore);
-    alert(`Quiz Submitted! Your Score: ${calculatedScore} / ${questions.length}`);
+    showAlert({ message: `Quiz Submitted! Your Score: ${calculatedScore} / ${questions.length}`, type: "info" });
   };
 
   if (!selectedTopic) {
@@ -88,10 +96,10 @@ const QuizContent = () => {
         Question {currentQuestionIndex + 1} / {questions.length}
       </h2>
       <p className="mb-8 text-xl font-medium text-gray-700 text-center">
-        {questions[currentQuestionIndex].question}
+        {(questions[currentQuestionIndex] as Question).question}
       </p>
       <div className="space-y-4">
-        {questions[currentQuestionIndex].options.map((option, index) => (
+        {(questions[currentQuestionIndex] as Question).options.map((option: string, index: number) => (
           <label
             key={index}
             className={`block p-4 border rounded-lg cursor-pointer transition duration-300 text-lg font-medium ${

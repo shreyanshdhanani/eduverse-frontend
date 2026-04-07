@@ -16,8 +16,10 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import { SaveAIExamResult } from '@/app/service/ai-exam-service';
+import { useModal } from '@/components/ModalProvider';
 
 export default function AIExamAttempt() {
+    const { showConfirm } = useModal();
     const router = useRouter();
 
     // Exam Data
@@ -250,7 +252,13 @@ export default function AIExamAttempt() {
                         </div>
 
                         <button
-                            onClick={() => { if (confirm('Are you sure you want to exit? All progress will be lost.')) router.push('/ai-exam') }}
+                            onClick={async () => { 
+                                const confirmed = await showConfirm({ 
+                                    message: 'Are you sure you want to exit? All progress will be lost.',
+                                    type: 'warning'
+                                });
+                                if (confirmed) router.push('/ai-exam');
+                            }}
                             className="p-4 bg-white border border-gray-100 rounded-2xl text-gray-400 hover:text-red-500 transition-colors"
                         >
                             <LogOut size={20} />

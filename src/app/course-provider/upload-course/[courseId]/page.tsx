@@ -5,11 +5,13 @@ import { GetAllCategoryService } from "@/app/service/category-service";
 import { GetSubcategoriesByCategoryService } from "@/app/service/subcategory-service";
 import { GetTopicsBySubcategoryService } from "@/app/service/topic-service";
 import { CreateCourseWithBasicInformation } from "@/app/service/course-provider-service";
+import { useModal } from "@/components/ModalProvider";
 
 const UploadCourse = () => {
 
   const params = useParams();
   const router = useRouter();
+  const { showAlert } = useModal();
   const Id = params?.courseId;
 
   // ✅ Form States
@@ -35,8 +37,8 @@ const UploadCourse = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await GetAllCategoryService();
-        setCategories(response);
+        const response: any = await GetAllCategoryService();
+        setCategories(response || []);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -49,8 +51,8 @@ const UploadCourse = () => {
     if (courseCategory) {
       const fetchSubcategories = async () => {
         try {
-          const response = await GetSubcategoriesByCategoryService(courseCategory);
-          setSubcategories(response);
+          const response: any = await GetSubcategoriesByCategoryService(courseCategory);
+          setSubcategories(response || []);
         } catch (error) {
           console.error("Error fetching subcategories:", error);
         }
@@ -68,8 +70,8 @@ const UploadCourse = () => {
     if (courseSubcategory) {
       const fetchTopics = async () => {
         try {
-          const response = await GetTopicsBySubcategoryService(courseSubcategory);
-          setTopics(response);
+          const response: any = await GetTopicsBySubcategoryService(courseSubcategory);
+          setTopics(response || []);
         } catch (error) {
           console.error("Error fetching topics:", error);
         }
@@ -86,7 +88,7 @@ const UploadCourse = () => {
     const authToken = localStorage.getItem("authToken");
 
     if (!authToken) {
-      alert("Authentication required. Please log in.");
+      showAlert({ message: "Authentication required. Please log in.", type: "warning" });
       return;
     }
 
@@ -110,20 +112,16 @@ const UploadCourse = () => {
 
     try {
       // ✅ Submit Data to Backend API
-      const response = await CreateCourseWithBasicInformation(formData, Id);
-
-      if (!response || response.error) {
-        throw new Error("Course upload failed.");
-      }
+      const response = await CreateCourseWithBasicInformation(formData, Id as string);
 
       console.log("Success:", response);
-      alert("Course uploaded successfully!");
+      showAlert({ message: "Course uploaded successfully!", type: "success" });
 
       // ✅ Redirect to My Courses Page
       router.push("/course-provider/courses");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error uploading course:", error);
-      alert("Error uploading course. Please try again.");
+      showAlert({ message: error.message || "Error uploading course. Please try again.", type: "error" });
     }
   };
 

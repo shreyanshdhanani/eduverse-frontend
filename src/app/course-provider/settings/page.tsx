@@ -7,8 +7,10 @@ import { GetTopicsBySubcategoryService } from "@/app/service/topic-service";
 import { FaCamera } from "react-icons/fa";
 import { getProfile, ProfileService } from "@/app/service/course-provider-service";
 import { getAssetUrl } from "@/app/utils/asset-url";
+import { useModal } from "@/components/ModalProvider";
 
 const CourseProviderSettings = () => {
+  const { showAlert } = useModal();
   const [profile, setProfile] = useState({
     name: "",
     email: "",
@@ -114,9 +116,10 @@ const CourseProviderSettings = () => {
       });
 
       await ProfileService(formData);
+      showAlert({ message: "Profile updated successfully!", type: "success" });
     } catch (error: any) {
       console.error("Error updating profile:", error);
-      alert(error.message || "Profile update failed.");
+      showAlert({ message: error.message || "Profile update failed.", type: "error" });
     }
   };
 

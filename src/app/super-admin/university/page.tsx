@@ -12,6 +12,7 @@ import {
 } from "@/app/service/university-service";
 import { Mail, Phone, Globe, ChevronDown, Building2, CreditCard, Calendar, X, CheckCircle2, AlertCircle } from "lucide-react";
 import { getAssetUrl } from "@/app/utils/asset-url";
+import { useModal } from "@/components/ModalProvider";
 
 const statusStyles: Record<string, { bg: string; text: string; dot: string }> = {
   Approved: { bg: "bg-green-100", text: "text-green-700", dot: "bg-green-500" },
@@ -20,6 +21,7 @@ const statusStyles: Record<string, { bg: string; text: string; dot: string }> = 
 };
 
 const UniversityManagement = () => {
+  const { showAlert } = useModal();
   const [universities, setUniversities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -70,8 +72,9 @@ const UniversityManagement = () => {
       setUniversities((prev) =>
         prev.map((u) => u._id === id ? { ...u, approvalStatus: newStatus } : u)
       );
+      showAlert({ message: `Status updated to ${newStatus} successfully!`, type: "success" });
     } catch {
-      alert("Failed to update status. Please try again.");
+      showAlert({ message: "Failed to update status. Please try again.", type: "error" });
     } finally {
       setUpdating(null);
     }
@@ -79,7 +82,7 @@ const UniversityManagement = () => {
 
   const handleAssignPlan = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!assignData.planId) return alert("Please select a plan");
+    if (!assignData.planId) return showAlert({ message: "Please select a plan", type: "warning" });
     setAssignLoading(true);
     try {
       await AssignSubscriptionPlanService({
@@ -87,10 +90,10 @@ const UniversityManagement = () => {
         planId: assignData.planId,
         durationDays: assignData.durationDays
       });
-      alert("Plan assigned successfully!");
+      showAlert({ message: "Plan assigned successfully!", type: "success" });
       setIsAssignModalOpen(false);
     } catch (err: any) {
-      alert(err.message || "Failed to assign plan");
+      showAlert({ message: err.message || "Failed to assign plan", type: "error" });
     } finally {
       setAssignLoading(false);
     }
@@ -108,8 +111,9 @@ const UniversityManagement = () => {
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
+      showAlert({ message: "PDF exported successfully!", type: "success" });
     } catch {
-      alert("Failed to generate PDF. Try again.");
+      showAlert({ message: "Failed to generate PDF. Try again.", type: "error" });
     } finally {
       setPdfLoading(false);
     }

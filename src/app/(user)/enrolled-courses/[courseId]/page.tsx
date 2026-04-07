@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { GetCourseDetailsService } from "@/app/service/course-service";
 import { GenerateQuestionService } from "@/app/service/quiz.service";
 import { getAssetUrl } from "@/app/utils/asset-url";
+import { useModal } from "@/components/ModalProvider";
 
 // Types
 interface Course {
@@ -30,6 +31,7 @@ interface Question {
 }
 
 export default function LearnCourse() {
+  const { showAlert } = useModal();
   const params = useParams();
   const courseId = params?.courseId as string;
 
@@ -47,7 +49,7 @@ export default function LearnCourse() {
     const fetchCourseDetails = async () => {
       try {
         setLoading(true);
-        const data = await GetCourseDetailsService(courseId);
+        const data: any = await GetCourseDetailsService(courseId);
         setCourse(data);
       } catch (err) {
         setError("Failed to load course content.");
@@ -204,7 +206,7 @@ export default function LearnCourse() {
             {score >= questions.length * 0.7 ? (
               <button
                 className="mt-4 bg-purple-700 hover:bg-purple-800 text-white px-6 py-3 rounded-lg"
-                onClick={() => alert("🎉 Certificate Generated! (Coming Soon)")}
+                onClick={() => showAlert({ message: "🎉 Certificate Generated! (Coming Soon)", type: "info" })}
               >
                 🎓 Download Certificate
               </button>

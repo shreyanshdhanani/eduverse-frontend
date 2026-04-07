@@ -9,8 +9,10 @@ import {
   DeleteSubscriptionPlanService 
 } from "@/app/service/university-service";
 import axios from "axios";
+import { useModal } from "@/components/ModalProvider";
 
 const SubscriptionPlansPage = () => {
+  const { showAlert, showConfirm } = useModal();
   const [plans, setPlans] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -79,27 +81,37 @@ const SubscriptionPlansPage = () => {
     try {
       if (editingPlan) {
         await UpdateSubscriptionPlanService(editingPlan._id, formData);
-        alert("Plan updated successfully!");
+        showAlert({ message: "Plan updated successfully!", type: "success" });
       } else {
         await CreateSubscriptionPlanService(formData);
-        alert("Plan created successfully!");
+        showAlert({ message: "Plan created successfully!", type: "success" });
       }
       setIsModalOpen(false);
       fetchPlans();
     } catch (err: any) {
-      alert(err.message || "Operation failed");
+      showAlert({ message: err.message || "Operation failed", type: "error" });
     } finally {
       setFormLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this plan?")) return;
+    const confirmed = await showConfirm({
+      title: "Delete Plan",
+      message: "Are you sure you want to delete this plan? This action cannot be undone.",
+      type: "confirm",
+      confirmText: "Delete",
+      cancelText: "Cancel"
+    });
+    
+    if (!confirmed) return;
+    
     try {
       await DeleteSubscriptionPlanService(id);
       fetchPlans();
+      showAlert({ message: "Plan deleted successfully!", type: "success" });
     } catch (err: any) {
-      alert(err.message || "Delete failed");
+      showAlert({ message: err.message || "Delete failed", type: "error" });
     }
   };
 

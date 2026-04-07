@@ -5,6 +5,7 @@ import { FaCheckCircle, FaTimesCircle, FaClock } from "react-icons/fa";
 import axios from "axios";
 import { GetAllCourseProviderService, CourseProviderStatusService } from "@/app/service/course-provider-service";
 import { Mail, Phone, ChevronDown, Users } from "lucide-react";
+import { useModal } from "@/components/ModalProvider";
 
 const statusStyles: Record<string, { bg: string; text: string; dot: string }> = {
   Approved: { bg: "bg-green-100", text: "text-green-700", dot: "bg-green-500" },
@@ -14,6 +15,7 @@ const statusStyles: Record<string, { bg: string; text: string; dot: string }> = 
 };
 
 const CourseProviderManagement = () => {
+  const { showAlert } = useModal();
   const [courseProviders, setCourseProviders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -46,8 +48,9 @@ const CourseProviderManagement = () => {
       setCourseProviders((prev) =>
         prev.map((provider) => provider._id === id ? { ...provider, status: newStatus } : provider)
       );
+      showAlert({ message: `Provider status updated to ${newStatus} successfully!`, type: "success" });
     } catch {
-      alert("Failed to update status. Please try again.");
+      showAlert({ message: "Failed to update status. Please try again.", type: "error" });
     } finally {
       setUpdating(null);
     }

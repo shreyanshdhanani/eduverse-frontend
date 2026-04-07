@@ -4,10 +4,12 @@ import { useParams, useRouter } from "next/navigation";
 import { EnrollCourseService, GetCourseDetailsService } from "@/app/service/course-service";
 import { AddToCartService } from "@/app/service/cart-service";
 import { getAssetUrl } from "@/app/utils/asset-url";
+import { useModal } from "@/components/ModalProvider";
 
 export default function CourseDetails() {
   const params = useParams();
   const router = useRouter();
+  const { showAlert } = useModal();
   const courseId = params?.courseId as string;
   const [course, setCourse] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -40,9 +42,9 @@ export default function CourseDetails() {
 
     try {
       const response = await EnrollCourseService(token, id);
-      alert((response as any).message || "Successfully enrolled.");
+      showAlert({ message: (response as any).message || "Successfully enrolled.", type: "success" });
     } catch (err: any) {
-      alert(err.message || "Enrollment failed.");
+      showAlert({ message: err.message || "Enrollment failed.", type: "error" });
     }
   };
 
@@ -58,19 +60,22 @@ export default function CourseDetails() {
       const status = (response as any).status;
       switch (status) {
         case "university_student":
-        alert("You're a university student. No need to purchase. Just enrolled!");
+        showAlert({ 
+          message: "You're a university student. No need to purchase. Just enrolled!", 
+          type: "info" 
+        });
         break;
         case "added_to_cart":
-          alert("Course added to cart successfully!");
+          showAlert({ message: "Course added to cart successfully!", type: "success" });
           break;
         case "already_in_cart":
-          alert("Course is already in your cart.");
+          showAlert({ message: "Course is already in your cart.", type: "info" });
           break;
         default:
-          alert("Something unexpected happened.");
+          showAlert({ message: "Something unexpected happened.", type: "warning" });
       }
     } catch (err: any) {
-      alert(err.message || "Error adding course to cart.");
+      showAlert({ message: err.message || "Error adding course to cart.", type: "error" });
     }
   };
 
