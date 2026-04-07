@@ -42,9 +42,17 @@ const StudentLoginPage = () => {
     if (!validateForm()) return;
     setIsSubmitting(true);
     try {
-      await LoginService(email, password);
-      toast.success("Login successful! Redirecting...", { autoClose: 2000 });
-      setTimeout(() => router.push("/"), 2000);
+      const res = await LoginService(email, password);
+      toast.success("Login successful!", { autoClose: 1500 });
+      
+      const user = res.user;
+      setTimeout(() => {
+        if (user?.mustChangePassword) {
+          router.push("/change-password");
+        } else {
+          router.push("/");
+        }
+      }, 1500);
     } catch (error: any) {
       toast.error(error.message || "Login failed. Please try again.", { autoClose: 3000 });
       setIsSubmitting(false);

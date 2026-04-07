@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  Settings, LogOut, LayoutDashboard, BookOpen, ChevronRight, Layout, Menu, X,
+  Settings, LogOut, LayoutDashboard, BookOpen, ChevronRight, Layout, Menu, X, CreditCard,
 } from "lucide-react";
 import Link from "next/link";
 import { PiStudent } from "react-icons/pi";
@@ -17,6 +17,7 @@ const menuItems = [
   { id: "courseProvider", title: "Course Providers", icon: <LiaChalkboardTeacherSolid size={22} />, href: "/super-admin/course-providers" },
   { id: "university", title: "Universities", icon: <LiaUniversitySolid size={22} />, href: "/super-admin/university" },
   { id: "categories", title: "Categories", icon: <LiaShapesSolid size={22} />, href: "/super-admin/categories" },
+  { id: "subscription-plans", title: "Subscription Plans", icon: <CreditCard size={20} />, href: "/super-admin/subscription-plans" },
   { id: "courses", title: "Manage Courses", icon: <LuNotebookPen size={20} />, href: "/super-admin/courses" },
   { id: "cms", title: "Manage Content", icon: <Layout size={20} />, href: "/super-admin/cms" },
   { id: "settings", title: "Settings", icon: <Settings size={20} />, href: "/super-admin/settings" },

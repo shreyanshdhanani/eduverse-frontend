@@ -195,3 +195,148 @@ export const GetUniversityEnrolledStudents = async () => {
         }
     }
 };
+
+// ─── New Subscription API Calls ───────────────────────────────────────────────
+
+export const GetActiveSubscriptionService = async () => {
+    try {
+        const token = localStorage.getItem('authToken');
+        const response = await axiosInstance.get(`/university-admin/active-subscription/${token}`);
+        return response;
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            const errorMessage = (error as AxiosError<any>).response?.data?.message || "Failed to fetch subscription";
+            throw new Error(errorMessage);
+        } else {
+            throw new Error("An unexpected error occurred.");
+        }
+    }
+}
+
+export const GetSubscriptionUsageService = async () => {
+    try {
+        const token = localStorage.getItem('authToken');
+        const response = await axiosInstance.get(`/university-admin/subscription-usage/${token}`);
+        return response;
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            const errorMessage = (error as AxiosError<any>).response?.data?.message || "Failed to fetch subscription usage";
+            throw new Error(errorMessage);
+        } else {
+            throw new Error("An unexpected error occurred.");
+        }
+    }
+}
+
+export const GetAllSubscriptionPlansService = async () => {
+    try {
+        const response = await axiosInstance.get(`/subscription-plans`);
+        return response;
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            const errorMessage = (error as AxiosError<any>).response?.data?.message || "Failed to fetch plans";
+            throw new Error(errorMessage);
+        } else {
+            throw new Error("An unexpected error occurred.");
+        }
+    }
+}
+
+export const CreateSubscriptionPlanService = async (data: any) => {
+    try {
+        const response = await axiosInstance.post(`/subscription-plans`, data);
+        return response;
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            const errorMessage = (error as AxiosError<any>).response?.data?.message || "Failed to create plan";
+            throw new Error(errorMessage);
+        } else {
+            throw new Error("An unexpected error occurred.");
+        }
+    }
+}
+
+export const UpdateSubscriptionPlanService = async (id: string, data: any) => {
+    try {
+        const response = await axiosInstance.patch(`/subscription-plans/${id}`, data);
+        return response;
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            const errorMessage = (error as AxiosError<any>).response?.data?.message || "Failed to update plan";
+            throw new Error(errorMessage);
+        } else {
+            throw new Error("An unexpected error occurred.");
+        }
+    }
+}
+
+export const DeleteSubscriptionPlanService = async (id: string) => {
+    try {
+        const response = await axiosInstance.delete(`/subscription-plans/${id}`);
+        return response;
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            const errorMessage = (error as AxiosError<any>).response?.data?.message || "Failed to delete plan";
+            throw new Error(errorMessage);
+        } else {
+            throw new Error("An unexpected error occurred.");
+        }
+    }
+}
+
+export const AssignSubscriptionPlanService = async (data: any) => {
+    try {
+        const response = await axiosInstance.post(`/subscription-plans/assign`, data);
+        return response;
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            const errorMessage = (error as AxiosError<any>).response?.data?.message || "Failed to assign plan";
+            throw new Error(errorMessage);
+        } else {
+            throw new Error("An unexpected error occurred.");
+        }
+    }
+}
+
+export const CreateSubscriptionCheckoutSessionService = async (planId: string) => {
+    try {
+        const response: any = await axiosInstance.post(`/stripe/create-subscription-session`, { planId });
+        return response;
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            const errorMessage = (error as AxiosError<any>).response?.data?.message || "Failed to create checkout session";
+            throw new Error(errorMessage);
+        } else {
+            throw new Error("An unexpected error occurred.");
+        }
+    }
+}
+
+export const AddStudentManualService = async (data: any) => {
+    try {
+        const token = localStorage.getItem('authToken');
+        const response: any = await axiosInstance.post(`/university-admin/add-student-manual`, { ...data, universityToken: token });
+        return response;
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            const errorMessage = (error as AxiosError<any>).response?.data?.message || "Failed to add student";
+            throw new Error(errorMessage);
+        } else {
+            throw new Error("An unexpected error occurred.");
+        }
+    }
+}
+
+export const VerifySubscriptionSessionService = async (sessionId: string) => {
+    try {
+        const response: any = await axiosInstance.post(`/stripe/verify-session`, { sessionId });
+        return response;
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            const errorMessage = (error as AxiosError<any>).response?.data?.message || "Verification failed";
+            throw new Error(errorMessage);
+        } else {
+            throw new Error("An unexpected error occurred during verification.");
+        }
+    }
+}
