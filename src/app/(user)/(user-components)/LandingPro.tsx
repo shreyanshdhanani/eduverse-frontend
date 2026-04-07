@@ -11,8 +11,10 @@ import {
   PlayCircle,
   Globe,
   Zap,
-  ShieldCheck
+  ShieldCheck,
+  Building
 } from "lucide-react";
+import { getAssetUrl } from "@/app/utils/asset-url";
 import Link from "next/link";
 
 interface LandingData {
@@ -152,8 +154,20 @@ export default function LandingPro({ data, featuredCourse }: { data: LandingData
             {(partners?.length ? partners : [
               { name: "Google" }, { name: "Microsoft" }, { name: "Stanford" }, { name: "Harvard" }, { name: "Amazon" }
             ]).map((p, idx) => (
-              <div key={idx} className="text-2xl font-black text-gray-300 italic tracking-tighter">
-                {p.logoUrl ? <img src={p.logoUrl} alt={p.name} className="h-8 w-auto" /> : p.name}
+              <div key={idx} className="flex flex-col items-center gap-2 group cursor-pointer transition-all hover:scale-110">
+                {p.profilePicture ? (
+                   <img 
+                    src={getAssetUrl(p.profilePicture)} 
+                    alt={p.courseProvider?.name || p.name} 
+                    className="h-12 w-auto object-contain filter drop-shadow-sm" 
+                   />
+                ) : (
+                   <div className="flex items-center gap-2">
+                      <div className="text-2xl font-black text-gray-400 italic tracking-tighter uppercase underline decoration-purple-200">
+                        {p.courseProvider?.name || p.name}
+                      </div>
+                   </div>
+                )}
               </div>
             ))}
           </div>

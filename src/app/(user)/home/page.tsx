@@ -5,21 +5,24 @@ import LandingPro from "../(user-components)/LandingPro";
 import CourseCarousel from "../(user-components)/(course)/course";
 import { GetLandingPageService } from "@/app/service/cms-service";
 import { GetAllCoursesService } from "@/app/service/course-service";
-import { GetCoursesListByCourseProviderService } from "@/app/service/course-provider-service"; // Or use standard GetAllCources
+import { GetPartnersService } from "@/app/service/course-provider-service";
 
 export default function Home() {
   const [cmsData, setCmsData] = useState<any>(null);
   const [featuredCourse, setFeaturedCourse] = useState<any>(null);
+  const [partners, setPartners] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [landingRes, coursesRes] = await Promise.all([
+        const [landingRes, coursesRes, partnersRes] = await Promise.all([
           GetLandingPageService(),
-          GetAllCoursesService()
+          GetAllCoursesService(),
+          GetPartnersService()
         ]);
         setCmsData(landingRes);
+        setPartners(Array.isArray(partnersRes) ? partnersRes : (partnersRes as any)?.data || []);
         const courses = (coursesRes as any) as any[];
         if (courses && courses.length > 0) {
           setFeaturedCourse(courses[0]);
@@ -44,7 +47,7 @@ export default function Home() {
   return (
     <main className="bg-white">
       {/* 1. Dynamic Landing Pro Section (Hero, Stats, Features, Testimonials, Partners) */}
-      <LandingPro data={cmsData || {}} featuredCourse={featuredCourse} />
+      <LandingPro data={{ ...cmsData, partners: partners.length > 0 ? partners : cmsData?.partners }} featuredCourse={featuredCourse} />
 
       {/* 2. Existing Course Selection / Categories */}
       <div className="bg-gray-50/50 py-12 sm:py-16 lg:py-20">

@@ -99,9 +99,7 @@ export const getProfile = async () => {
 
 export const ProfileService = async (formData: any) => {
   try {
-    const response = await axiosInstance.patch(`/course-provider/profile`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    const response = await axiosInstance.patch(`/course-provider/profile`, formData);
     return response;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || 'Profile save failed.');
@@ -141,5 +139,14 @@ export const CourseProviderStatusService = async (id: string, status: string) =>
     return response;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || 'Status update failed.');
+  }
+};
+
+export const GetPartnersService = async () => {
+  try {
+    const response = await axiosInstance.get(`/course-provider/partners`);
+    return response;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || 'Failed to fetch partners.');
   }
 };
